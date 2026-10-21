@@ -224,6 +224,8 @@ h1,h2,h3,.brand{color:#000;font-weight:700}
 .kst{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(150px,100%),1fr));gap:2px 12px}.kst div{display:flex;justify-content:space-between;gap:6px;border-bottom:1px dotted #ccc;padding:2px 0}.kst span{color:#333}.kst b{color:#000}
 .klgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr));gap:12px}
 .card{border-left:1px solid #000!important;border-right:1px solid #000!important;border-bottom:1px solid #000!important}
+.lcard.scard{border:1px solid #000;border-radius:10px;padding:10px}
+.kcard{background:#fff!important;border:1px solid #000!important;border-radius:10px;box-shadow:none!important}
 .lcard.fcard{border:1px solid #000;border-radius:10px;padding:10px}
 .klcard{border:1px solid #000;border-radius:10px;padding:10px;display:grid;gap:8px;align-content:start;min-width:0;font-size:14.5px}
 .khead{display:flex;gap:10px;align-items:flex-start}.kbot{flex:0 0 auto;width:62px}.kbot svg{width:100%;height:auto}
@@ -498,11 +500,11 @@ function briefHtml(){brLim(brOf());brHid(brOf());const b=brOf(),nx=Math.max(0,(M
  return h+`</div>`}
 // ---- sayfalar ----
 function sirCard(c){const C=SIRD(c),st=EV().cos[c],v=st.view.me??50,back=(UI.coBack||{})[c];
- if(back){const its=st.items.map(it=>({...it,on:1})).concat(st.past);return `<div class="lcard" style="border-top:4px solid var(--accent)"><div class="spread"><b>${esc(C.n)} · arka yüz</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Önü</button></div>
+ if(back){const its=st.items.map(it=>({...it,on:1})).concat(st.past);return `<div class="lcard scard" style="border-top:4px solid var(--accent)"><div class="spread"><b>${esc(C.n)} · arka yüz</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Önü</button></div>
   <div class="lbl">Aldığı parfümler</div><div class="scroll"><table><thead><tr><th>Parfüm</th><th>Parfümatör</th><th>Anlaşma</th><th class="n">Satılan</th><th class="n">Stok</th><th class="n">Maliyet</th><th class="n">Fiyat</th><th class="n">Şöhret</th></tr></thead><tbody>${its.map(it=>`<tr${it.by==="me"?' style="font-weight:700"':""}><td>${esc(it.name)}${it.on?"":` <span class="mnote">raftan kalktı</span>`}</td><td style="font-size:13.5px">${esc(pfNm(it.by))}</td><td style="font-size:13.5px">${dealTxt(it.deal)}</td><td class="n">${it.sat}</td><td class="n">${it.on?it.stok:"—"}</td><td class="n">${tl(it.unit)}</td><td class="n">${tl(it.fiyat)}</td><td class="n">${Math.round(it.sht)}</td></tr>`).join("")}</tbody></table></div>
   <div class="lbl" style="margin-top:6px">Parfümatörlere bakışı</div><div class="chips">${PFR.map(p=>{const x=st.view[p[0]]??50;return `<span class="chip${p[0]==="me"?" on":""}">${esc(p[0]==="me"?"sen":p[1])} <b class="${x>=60?"ok":x<40?"bad":""}">${x}</b></span>`}).join("")}</div>
   <div class="mnote">Bakış puanı, o parfümatörden aldığı parfümler beklenenden çok satınca yükselir, az satınca düşer. Ciro ${tlk(st.ciro)}.</div></div>`}
- return `<div class="lcard"><div class="spread"><b>${esc(C.n)}</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Arkası</button></div>
+ return `<div class="lcard scard"><div class="spread"><b>${esc(C.n)}</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Arkası</button></div>
  <div class="chips"><span class="chip">${FAM_IC[C.ana]||""} ana koku: ${C.ana}</span><span class="chip">${FAM_IC[C.yan]||""} yan koku: ${C.yan}</span></div>
  <div class="mnote">🌍 ${C.ulke.map(u=>{const U=ULD(u);return `${U.fl} ${U.n}`}).join(" · ")}</div>
  <div class="mnote">👥 ${C.mt.map(m=>`${MTD(m).ic} ${MTD(m).n}`).join(" · ")}</div>
