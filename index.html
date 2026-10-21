@@ -465,6 +465,7 @@ function brNew(news){const C=SIRD(pickA(SIR)[0]),u0=(()=>{const ws=C.ulke.map(u=
  {const u=u0,U=ULD(u),cl=EV().cos[C.id].loves,ul=ulLoves(u);b0.u=u;b0.sez=U.sez;b0.sy=U.sy;b0.loves=[...new Set([pickA(cl)].concat(ul,cl))].slice(0,3);const yn=UF.find(f=>f!==fam);if(yn&&Math.random()<.5)b0.yan=yn;b0.coF=[C.ana,C.yan]}
  if(Math.random()<.5){const pat=patFor(),keys={};LAY.forEach((L,i)=>{const pool=byL[L].filter(k=>!NB[k].mol).sort(()=>Math.random()-.5),fav=pool.filter(k=>NB[k].fam===fam);keys[L]=fav.slice(0,Math.ceil(pat[i]*.6)).concat(pool.filter(k=>NB[k].fam!==fam)).slice(0,pat[i])});b0.keys=keys;b0.pat=pat;
   const ks=LAY.flatMap(L=>keys[L]),est=ks.reduce((x,k)=>x+NB[k].price,0)/ks.length*CONC[conc]/10+(2000-CONC[conc]*20)/20*.5+95;b0.maxU=Math.max(b0.maxU,Math.round(est*1.25/10)*10)}
+ if(b0.keys)delete b0.yan;// müşterinin formülü sabit: yan aile şartı konmaz
  brLim(b0);brHid(b0);MAG.brief=b0;news.push(`📨 ${C.n} ${ULD(b0.u).fl} ${ULD(b0.u).n} mağazaları için sipariş verdi: ${GEN_IC[C.gen]} ${C.gen.toLowerCase()} için ${b0.keys?"":`${SEZ_IC[b0.sez]} ${b0.sez.toLowerCase()}, `}${fam} ağırlıklı ${conc}${b0.keys?" (kendi formülüyle geldi)":""}. AR-GE sayfasında.`)}
 // sipariş sınırları ayrı: formül en fazla, şişe en az–en fazla (şirketin şişe bütçesi)
 const BR_MAXF={EDT:[170,300],EDP:[240,420],Extrait:[330,600]};
