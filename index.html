@@ -493,7 +493,10 @@ const TELIF_GUN=720;
 function teklif(c,f,sc,ozel){const C=SIRD(c);if(sc<4)return null;const tn=f&&f.by==="me"?tanN(f.id):0,p=Math.round((sc-3)*14000*(.6+C.fg*.25)*(f&&f.gp?f.gp/60:1)*(1+Math.min(.3,.03*tn))*ktBon(f)/1000)*1000;
  if(ozel)return{ozel:p};if(sc<6)return{telif:Math.round((1+(sc-4)*.5)*10)/1000};
  return{telif:Math.round((3+(sc-6))*10)/1000,ilk:Math.round(p*.25/1000)*1000,patent:sc>=8?Math.round(p*1.8/1000)*1000:0}}
-function dealDo(c,f,deal,sc){const C=SIRD(c),st=EV().cos[c],it=Object.assign({},f,{deal:Object.assign({d:MAG.day},deal),sc,sat:0,stok:0,ciro:0,fiyat:Math.round(f.unit*(1.5+C.fg*.35)/5)*5,sht:Math.round(8+sc*3),hs:[],d0:MAG.day,ul:{},mt:{}});
+// 🌟 şöhret tavanı ülke sayısından (CEKO 2026-10-22): şirketin ülkeleri + parfümün tanındığı ülkeler
+const SHT_T=[[1,30],[3,45],[6,60],[10,75],[15,85],[25,100]];
+function shtCap(it,C){const u=new Set(C.ulke);if(it.by==="me")(((MAG.evd||{}).tan||{})[it.id]||[]).forEach(x=>u.add(x));const n=u.size;if(n>=25)return 100;for(let i=1;i<SHT_T.length;i++)if(n<=SHT_T[i][0]){const[a,x]=SHT_T[i-1],[b,y]=SHT_T[i];return Math.round(x+(y-x)*(Math.max(n,a)-a)/(b-a))}return 100}
+function dealDo(c,f,deal,sc){const C=SIRD(c),st=EV().cos[c],it=Object.assign({},f,{deal:Object.assign({d:MAG.day},deal),sc,sat:0,stok:0,ciro:0,fiyat:Math.round(f.unit*(1.5+C.fg*.35)/5)*5,sht:Math.round(Math.min(8+sc*3,shtCap(f,C)*.5)),hs:[],d0:MAG.day,ul:{},mt:{}});
  if(it.by!=="ev"&&deal.t!=="ev")st.lastBuy=MAG.day;st.items.unshift(it);if(st.items.length>6){const o=st.items.pop();st.past.unshift(pastOf(o));st.past=st.past.slice(0,12)}return it}
 const pastOf=it=>({id:it.id,ciro:it.ciro,ul:it.ul,mt:it.mt,name:it.name,by:it.by,deal:it.deal,sat:it.sat,sc:it.sc,sht:Math.round(it.sht),d0:it.d0,end:MAG.day,unit:it.unit,fiyat:it.fiyat,telG:it.telG||0});
 const dealTxt=d=>d.t==="ev"?"🏢 kendi":d.t==="telif"?`📜 telif %${fmtP(Math.round(d.r*1000)/10)}`:d.t==="patent"?"🔒 patent":d.t==="ozel"?"🎨 özel tasarım":"🔒 patent";
@@ -505,7 +508,7 @@ function evDay(news){const E=EV();
   st.items.forEach((it,i)=>{let k=D*ws[i]/W*(.8+Math.random()*.4)*(it.yzB>MAG.day?1.1:1);k=Math.floor(k)+(Math.random()<k%1?1:0);
    if(it.stok<k+D){const n=300;it.stok+=n;st.cash-=n*it.unit}
    k=Math.min(k,it.stok);it.stok-=k;it.sat+=k;st.satT+=k;if(it.by!=="ev")st.satP=(st.satP||0)+k;if(k&&it.by==="me")kSplit(it,C,k);const rev=k*it.fiyat;it.ciro+=rev;st.cash+=rev;st.ciro+=rev;
-   it.sht=Math.max(0,Math.min(100,it.sht*.997+k*.05*(it.sc/7)));it.hs.push(k);if(it.hs.length>60)it.hs.shift();
+   {const cap=shtCap(it,C);it.sht=it.sht>cap?it.sht-(it.sht-cap)*.05:Math.max(0,it.sht*.997+k*.05*(it.sc/7)*(1-it.sht/cap))}it.hs.push(k);if(it.hs.length>60)it.hs.shift();
    if(it.by==="me"&&it.deal.prim&&k){const P=it.deal.prim;while(P.n<P.k.length&&it.sat>=P.k[P.n][0]){const v=P.k[P.n][1];st.cash-=v;MAG.cash+=v;E.gelir+=v;E.prim=(E.prim||0)+v;news.push(`🎯 ${it.name} ${P.k[P.n][0].toLocaleString("tr-TR")} şişe sattı: ${C.n} sana ${tl(v)} satış primi ödedi`);P.n++}}
    if(it.deal.t==="telif"&&MAG.day<it.deal.d+TELIF_GUN&&k){const t=Math.round(rev*it.deal.r);st.cash-=t;it.telG=(it.telG||0)+t;if(it.by==="me"){MAG.cash+=t;E.telif+=t;E.gelir+=t}else if(E.pf[it.by]){const P=E.pf[it.by];P.gelir+=t;P.g=P.g||{ozel:0,patent:0,ilk:0,telif:0};P.g.telif+=t}}});
   st.cash-=300+C.fg*200;
