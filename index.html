@@ -270,6 +270,7 @@ table.fin{width:100%;border-collapse:collapse;font-size:14px}table.fin th{text-a
 .gz .gfl{float:left;width:38%;margin:0 8px 4px 0}
 .gz table{width:100%;border-collapse:collapse;font-size:13px;margin:2px 0 6px}.gz td,.gz th{padding:2px;border-bottom:1px dotted var(--mr2);text-align:left}.gz th{font:10.5px "Special Elite",monospace;text-transform:uppercase}.gz td.n,.gz th.n{text-align:right;white-space:nowrap}
 .gz .ilan{text-align:center;border:3px double var(--mr2);padding:6px;font-size:13px;line-height:1.3}.gz .ilan b{display:block;font:400 21px/1.1 "UnifrakturMaguntia",serif;margin:2px 0}
+.gz .yz{letter-spacing:1px;white-space:nowrap}.gz small{font-size:11px;opacity:.8}
 .gz .ft{grid-column:1/-1;text-align:center;font:11px "Special Elite",monospace;border-top:3px double var(--mr2);padding-top:4px}
 @media (max-width:760px){.gz{padding:8px}.gz .gg{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.gz .p.s3,.gz .p.s4,.gz .p.s6{grid-column:span 2}.gz .p.s2{grid-column:span 2}.gz .p.m1{grid-column:span 1}.gz .p.r2{grid-row:auto}.gz .x2{columns:1}.gz .x{font-size:13px}}
 @media (max-width:760px) and (min-width:1px){.gz .p.m1 .gfr,.gz .p.m1 .gfl{float:none;width:70%;margin:0 auto 4px;display:block}}
@@ -408,12 +409,25 @@ function EV(){rkInit();let E=MAG.evd;if(E&&E.v===1){if(!E.mig1){E.mig1=1;for(con
  // başlangıçta her şirketin rafında kendi iki parfümü var (parfümatörden alınmadı); parfümatör rafları boş başlar
  SIR.forEach(r=>{const C=SIRD(r[0]);[C.ana,C.yan].forEach(fam=>{const by=pickA(PFR.slice(1))[0],f=pfMake(by,fam),sc=sirPuan(C.id,f).s;const it=dealDo(C.id,f,{t:"ev",pay:0},Math.max(5,sc));it.by="ev";it.d0=MAG.day-rr(20,160);it.sat=rr(300,3000);it.sht=rr(20,50)})});
  return E}
+// 📰 gazete haberleri: E.gz (başlık h, metin b, tür tp); oyun haberlerinden zengin olanlar
+function gzAdd(x){const E=MAG.evd;if(!E)return;E.gz=[Object.assign({d:MAG.day},x)].concat(E.gz||[]).slice(0,40)}
+const PF_IN={mira:"Mira Kaya'nın",jean:"Jean Morel'in",lucia:"Lucia Bianchi'nin",kenji:"Kenji Sato'nun"};
+const YET={burun:{kim:"asistan parfümörü",n:"Koku Burnu",ef:"Bundan sonraki formüllerinin kalitesi biraz artacak."},kimya:{kim:"kimyacısı",n:"Fiksatif Kimyası",ef:"Parfümleri tende daha uzun kalacak, daha çok yayılacak."},sise:{kim:"şişe tasarımcısı",n:"Şişe Tasarımı",ef:"Şişeleri şirketlerin gözüne daha güzel görünecek."}};
+const pfYetOf=by=>(MAG.evd&&MAG.evd.pf&&MAG.evd.pf[by]&&MAG.evd.pf[by].yet)||{burun:1,kimya:1,sise:1};
+// rakip kadrosu 90–160 günde bir gelişir (en çok 5. seviye)
+function pfYet(p,P){if(!P.yet)P.yet={burun:1,kimya:1,sise:1};if(!P.ynx)P.ynx=MAG.day+rr(90,160);if(MAG.day<P.ynx)return;P.ynx=MAG.day+rr(90,160);
+ const ks=Object.keys(P.yet).filter(k=>P.yet[k]<5);if(!ks.length)return;const k=pickA(ks),Y=YET[k];P.yet[k]++;
+ gzAdd({tp:"kad",h:`${PF_IN[p[0]]} ${Y.kim} ${Y.n} yeteneğini yükseltti`,b:`Seviye ${P.yet[k]-1} → ${P.yet[k]}. ${Y.ef}`})}
+// rakip yeni parfüm çıkarınca: şirketlerin beğendiği ve beğenmediği yanlar
+function gzCik(p,f,best,all){const C=SIRD(best.c),iyi=best.why.filter(w=>/✓|sevdiği|beğenildi|güveniyor|sever/.test(w)).slice(0,3).map(w=>w.replace(/ ✓/g,"")),
+ w0=all.slice().sort((a,b)=>a.s-b.s)[0],kot=w0?w0.why.filter(w=>/değil|<|istiyor|pahalı|zayıf|ucuz|aşıyor|sade|lüks|güvenmiyor/.test(w)).slice(0,2):[];
+ gzAdd({tp:"cik",nm:f.name,h:`${p[1]}, “${f.name}” parfümünü piyasaya sürdü`,b:`${C.n} rafında: ${f.conc}, ${f.fam} ağırlıklı. ${C.n} ${fmtP(best.s)} puan verdi${iyi.length?`; beğendiği yanlar: ${iyi.join(", ")}`:""}.${w0&&kot.length?` ${SIRD(w0.c).n} ise ${fmtP(w0.s)} puanla beğenmedi: ${kot.join(", ")}.`:""}`})}
 // rakip parfümatörün formülü: sevdiği aileye yakın notalar
-function pfMake(by,fam){const P=PFR.find(x=>x[0]===by),q=rr(P[2][0],P[2][1]),ks=Object.keys(NB).filter(k=>!NB[k].mol),n=rr(9,13),set=new Set();
+function pfMake(by,fam){const P=PFR.find(x=>x[0]===by),Y=pfYetOf(by),q=Math.min(95,rr(P[2][0],P[2][1])+Math.round((Y.burun-1)*1.5)),ks=Object.keys(NB).filter(k=>!NB[k].mol),n=rr(9,13),set=new Set();
  ks.filter(k=>NB[k].fam===fam).sort(()=>Math.random()-.5).slice(0,Math.ceil(n*.55)).forEach(k=>set.add(k));while(set.size<n)set.add(pickA(ks));
  const keys=[...set],c={};keys.forEach(k=>c[NB[k].fam]=(c[NB[k].fam]||0)+1);const fams=Object.entries(c).sort((a,b)=>b[1]-a[1]).map(([f,v])=>[f,Math.round(v/n*100)]);
  const av=f=>keys.reduce((a,k)=>a+NB[k][f],0)/n,conc=pickA(["EDT","EDP","EDP","Extrait"]),tier=Math.min(7,Math.max(2,Math.round((q-25)/9)));
- const o={id:"f"+Date.now().toString(36)+rnd(99999),name:pickA(PN1)+" "+pickA(PN2),by,fam:fams[0][0],fams,q,tier,conc,keys,kal:Math.min(100,Math.round(av("kal")*10*CONC_KAL[conc]*.8)),yay:Math.min(100,Math.round(av("yay")*10*CONC_YAY[conc]*.8)),nad:Math.round((av("rar")-1)/7*60),unit:Math.round(av("price")*CONC[conc]/10+(2000-CONC[conc]*20)/20*.5+95),day:MAG.day,dss:rr(45,82),dsc:rnd(3),sy:syOf(keys.map(k=>({k,p:1})),conc).v,gen:Math.random()<.75?famGen(fams[0][0]):"Unisex",sez:sezOf(seaOfKeys(keys)),dsk:rr(30,220),rg:Math.random()<.3?pickA(Object.keys(BOLGE)):null};o.gp=gpOf(o);o.tier=tierOf(o.gp,2,false,o.nad);return o}
+ const o={id:"f"+Date.now().toString(36)+rnd(99999),name:pickA(PN1)+" "+pickA(PN2),by,fam:fams[0][0],fams,q,tier,conc,keys,kal:Math.min(100,Math.round(av("kal")*10*CONC_KAL[conc]*.8*(1+(Y.kimya-1)*.03))),yay:Math.min(100,Math.round(av("yay")*10*CONC_YAY[conc]*.8*(1+(Y.kimya-1)*.03))),nad:Math.round((av("rar")-1)/7*60),unit:Math.round(av("price")*CONC[conc]/10+(2000-CONC[conc]*20)/20*.5+95),day:MAG.day,dss:Math.min(95,rr(45,82)+(Y.sise-1)*3),dsc:rnd(3),sy:syOf(keys.map(k=>({k,p:1})),conc).v,gen:Math.random()<.75?famGen(fams[0][0]):"Unisex",sez:sezOf(seaOfKeys(keys)),dsk:rr(30,220),rg:Math.random()<.3?pickA(Object.keys(BOLGE)):null};o.gp=gpOf(o);o.tier=tierOf(o.gp,2,false,o.nad);return o}
 // senin bitirdiğin formül
 const pfFromDone=d=>({gp:gpD(d),sy:d.p.sy!=null?d.p.sy:syOf(d.notes,d.conc).v,gen:d.gen||famGen(d.tgt.f1),sez:sezOf(d.p.sea),id:d.id,name:d.name,by:"me",fam:d.tgt.f1,fams:d.fams,q:d.q,tier:d.tier,conc:d.conc,keys:d.notes.map(x=>x.k),kal:d.p.kal,yay:d.p.yay,nad:d.p.nad,unit:Math.round(d.c.top),day:d.rd0,dss:d.dse?d.dse.s:null,dsc:d.dse?d.dse.bc:null,dsk:d.ds?dsCostOf(d.ds):null,ds:d.ds?Object.assign({},d.ds):null});
 // şirketin puanı 0–10: kendi kartına göre
@@ -454,15 +468,17 @@ const dealTxt=d=>d.t==="ev"?"🏢 kendi":d.t==="telif"?`📜 telif %${fmtP(Math.
 // her gün: şirketler satar, stok yeniler, şöhret ve parfümatöre bakış değişir; rakip parfümatörler seyrek icat eder
 function evDay(news){const E=EV();
  const maas=150*(KD.lv+2);MAG.cash-=maas+400;spd(MAG,"maas",maas);spd(MAG,"kira",400);
- SIR.forEach((r,ci)=>{const C=SIRD(r[0]),st=E.cos[C.id],D=sirDemand(C);
+ SIR.forEach((r,ci)=>{const C=SIRD(r[0]),st=E.cos[C.id],D=sirDemand(C);if(st.satT==null){st.satT=st.items.concat(st.past).reduce((a,x)=>a+(x.sat||0),0);st.msN=Math.floor(st.satT/5000)}
   const ws=st.items.map(it=>{const age=MAG.day-it.d0,af=age<20?.5+age*.025:Math.max(.25,1-(age-150)/450);return Math.pow(it.sc/10,2)*(.5+it.sht/100)*af*(1+.12*(it.known||0))}),W=ws.reduce((a,x)=>a+x,0)+.4;
   st.items.forEach((it,i)=>{let k=D*ws[i]/W*(.8+Math.random()*.4);k=Math.floor(k)+(Math.random()<k%1?1:0);
    if(it.stok<k+D){const n=300;it.stok+=n;st.cash-=n*it.unit}
-   k=Math.min(k,it.stok);it.stok-=k;it.sat+=k;if(it.by!=="ev")st.satP=(st.satP||0)+k;if(k&&it.by==="me")kSplit(it,C,k);const rev=k*it.fiyat;it.ciro+=rev;st.cash+=rev;st.ciro+=rev;
+   k=Math.min(k,it.stok);it.stok-=k;it.sat+=k;st.satT+=k;if(it.by!=="ev")st.satP=(st.satP||0)+k;if(k&&it.by==="me")kSplit(it,C,k);const rev=k*it.fiyat;it.ciro+=rev;st.cash+=rev;st.ciro+=rev;
    it.sht=Math.max(0,Math.min(100,it.sht*.997+k*.05*(it.sc/7)));it.hs.push(k);if(it.hs.length>60)it.hs.shift();
    if(it.deal.t==="telif"&&MAG.day<it.deal.d+TELIF_GUN&&k){const t=Math.round(rev*it.deal.r);st.cash-=t;it.telG=(it.telG||0)+t;if(it.by==="me"){MAG.cash+=t;E.telif+=t;E.gelir+=t}else if(E.pf[it.by]){const P=E.pf[it.by];P.gelir+=t;P.g=P.g||{ozel:0,patent:0,ilk:0,telif:0};P.g.telif+=t}}});
   st.cash-=300+C.fg*200;
-  if(!st.ul4&&(st.satP||0)>=UL4_SAT&&UL4[C.id]){st.ul4=UL4[C.id];st.ul4d=MAG.day;const U=ULD(st.ul4);news.push(`🌍 ${C.n} büyüdü: artık ${U.fl} ${U.n} mağazalarında da satıyor (${ulZevk(st.ul4)})`)}
+  if(Math.floor(st.satT/5000)>st.msN){st.msN=Math.floor(st.satT/5000);const top=st.items.slice().sort((a,b)=>b.sat-a.sat)[0];
+   gzAdd({tp:"rek",h:`${C.n} ${(st.msN*5000).toLocaleString("tr-TR")}. şişesini sattı`,b:`${top?`En çok satanı “${top.name}” (${pfNm(top.by)}). `:""}${pickA(["Şirket nakliyesini yükseltti: mağazalara teslimat artık daha hızlı.","Şirket yeni bir dağıtım deposu kiraladı.","Mağaza vitrinleri baştan yenilendi.","Satış ekibi büyütüldü, yeni temsilciler işe alındı."])}`})}
+  if(!st.ul4&&(st.satP||0)>=UL4_SAT&&UL4[C.id]){st.ul4=UL4[C.id];st.ul4d=MAG.day;const U=ULD(st.ul4);news.push(`🌍 ${C.n} ${UL4_SAT.toLocaleString("tr-TR")}. parfümatör şişesini sattı ve büyüdü: artık ${U.fl} ${U.n} mağazalarında da satıyor (${ulZevk(st.ul4)})`)}
   st.items=st.items.filter(it=>{if(it.deal.t==="telif"&&MAG.day>=it.deal.d+TELIF_GUN){st.past.unshift(pastOf(it));st.past=st.past.slice(0,12);if(it.by==="me"){delete E.sold[it.id];E.eski=E.eski||{};E.eski[it.id]=C.id;news.push(`📜 ${it.name} için ${C.n} ile telif süresi bitti: formül sana döndü, yeniden sunabilirsin`)}return false}
    const age=MAG.day-it.d0,avg=it.hs.slice(-30).reduce((a,x)=>a+x,0)/30;if(age>240&&avg<1.5){st.past.unshift(pastOf(it));st.past=st.past.slice(0,12);const geri=it.by==="me"&&it.deal.t==="telif";if(geri)delete E.sold[it.id];news.push(`${C.n}, ${it.name} parfümünü raftan kaldırdı${it.by==="me"?geri?" (senin formülün; telif bitti, formül sana döndü)":" (senin formülün)":""}`);return false}return true});
   // ayda bir: parfümatörlere bakış, satışlara göre
@@ -470,13 +486,16 @@ function evDay(news){const E=EV();
    for(const k in st.view)st.view[k]+=Math.round((50-st.view[k])*.05);
    for(const by in per){const r0=per[by].reduce((a,x)=>a+x,0)/per[by].length,old=st.view[by]??50,dv=Math.max(-4,Math.min(4,Math.round((r0-1)*5)));st.view[by]=Math.max(0,Math.min(100,old+dv));
     if(by==="me"&&Math.abs(st.view[by]-old)>=2)news.push(`${dv>0?"📈":"📉"} ${C.n} sana bakışı ${old} → ${st.view[by]} (${dv>0?"parfümün iyi satıyor":"parfümün beklenenden az satıyor"})`)}}});
- PFR.slice(1).forEach(p=>{const P=E.pf[p[0]];if(MAG.day<P.inv)return;P.inv=MAG.day+rr(50,90);
+ PFR.slice(1).forEach(p=>{const P=E.pf[p[0]];pfYet(p,P);
+  // seyrek: rakip laboratuvarında henüz bulmadığın bir molekül konuşulur (ipucu)
+  if(Math.random()<.002){const ms=Object.keys(MOLS).filter(k=>!LAB.mol[k]);if(ms.length){const m=MOLS[pickA(ms)];gzAdd({tp:"mo",h:`${PF_IN[p[0]]} laboratuvarında yeni molekül: ${m.n}`,b:`Kulislerde “${m.tease}” diye anlatılıyor. ${LN[m.l]} notalarda kullanılan bir ${m.fam.toLowerCase()} molekülü; Laboratuvar sayfasında sen de arayabilirsin.`})}}
+  if(MAG.day<P.inv)return;P.inv=MAG.day+rr(50,90);
   // rakip: kendi ailesi, ya da en uzun süredir parfüm almayan şirketin ailesi; alıcı en iyi puanlılar arasından, rafında az parfümatör işi olan öne geçer
-  const hun=SIR.slice().sort((a,b)=>(E.cos[a[0]].lastBuy||0)-(E.cos[b[0]].lastBuy||0))[0],r0=Math.random(),f=pfMake(p[0],r0<.4?p[3]:r0<.75?hun[2]:pickA(SIR)[2]),rows=SIR.map(r=>({c:r[0],s:sirPuan(r[0],f).s})).filter(x=>x.s>=5);
+  const hun=SIR.slice().sort((a,b)=>(E.cos[a[0]].lastBuy||0)-(E.cos[b[0]].lastBuy||0))[0],r0=Math.random(),f=pfMake(p[0],r0<.4?p[3]:r0<.75?hun[2]:pickA(SIR)[2]),all=SIR.map(r=>{const q=sirPuan(r[0],f);return{c:r[0],s:q.s,why:q.why}}),rows=all.filter(x=>x.s>=5);
   let best=null;if(rows.length){const w=rows.map(x=>Math.pow(x.s-4,2)/(1+E.cos[x.c].items.filter(it=>it.by!=="ev").length*.5)),tw=w.reduce((a,x)=>a+x,0);let u=Math.random()*tw;best=rows.find((x,i)=>(u-=w[i])<=0)||rows[0]}
   if(!best)P.inv=MAG.day+rr(20,35);
   if(best&&best.s>=5){const of=teklif(best.c,f,best.s),pat=!!of.patent&&Math.random()<.5;dealDo(best.c,f,pat?{t:"patent",pay:of.patent}:{t:"telif",r:of.telif,pay:of.ilk||0},best.s);P.n++;P.gelir+=pat?of.patent:(of.ilk||0);P.g=P.g||{ozel:0,patent:0,ilk:0,telif:0};if(pat)P.g.patent+=of.patent;else P.g.ilk+=(of.ilk||0);
-   news.push(`🧪 ${p[1]}, ${SIRD(best.c).n} ile anlaştı: ${f.name} (puan ${fmtP(best.s)})`)}
+   news.push(`🧪 ${p[1]}, ${SIRD(best.c).n} ile anlaştı: ${f.name} (puan ${fmtP(best.s)})`);gzCik(p,f,best,all)}
   else news.push(`🧪 ${p[1]} yeni formülünü kimseye satamadı`)})}
 // senin formülünü 11 şirkete sun: hepsi puan verir ve teklif eder
 function evSun(d){const E=EV(),f=pfFromDone(d);if(E.sold[d.id]||(E.sunT[d.id]||-999)+SUN_ARA>MAG.day)return;E.sunT[d.id]=MAG.day;
@@ -622,7 +641,7 @@ function formulHtml(){const E=EV(),L=flAll(),S=E.sun&&MAG.day<=E.sun.d+SUN_GUN?E
   return `<div class="verdict"><b>❌ Hiçbir şirket almadı · ${n}/${FAIL_MAX}</b><div>En yüksek puanı ${esc(SIRD(top.c).n)} verdi (${fmtP(top.s)}); teklif için en az 4 gerekiyor.${often.length?` En sık eksik: ${often.map(esc).join(" · ")}.`:""}</div><div>${n>=FAIL_MAX?`Hatalı formül sayıldı: ${tl(FAIL_CEZA)} ceza kesildi, parfüm piyasadan çekildi.`:`11 şirkette itibarın 1 puan düştü. ${FAIL_MAX}. kez satmazsa ${tl(FAIL_CEZA)} ceza, parfüm piyasadan çekilir. 🔧 Üzerinde oynayıp düzeltmeden yeniden sunma.`}</div>${d&&n<FAIL_MAX?`<div class="row"><button class="btn ghost" data-act="frev" data-id="${d.id}" ${rdWait()?"disabled":""}>🔧 Üzerinde oyna</button></div>`:""}</div>`})():""}</div>`}
  return h}
 // 📰 Gazete: oyundaki haberlerden eski gazete kolajı (örnek görsele göre: kareli kutular, açık/koyu zemin, gravür resimler)
-const gzTip=t=>/Borsada|depoya geldi/.test(t)?"hm":/büyüdü/.test(t)?"bu":/sipariş/.test(t)?"si":/raftan/.test(t)?"rf":/bakış|kırıldı/.test(t)?"mu":/telif süresi/.test(t)?"tl":/anlaştın|tanındın/.test(t)?"me":"pf";
+const gzTip=t=>/molekül bulundu|akor bulundu/.test(t)?"mo":/Borsada|depoya geldi/.test(t)?"hm":/büyüdü/.test(t)?"bu":/sipariş/.test(t)?"si":/raftan/.test(t)?"rf":/bakış|kırıldı/.test(t)?"mu":/telif süresi/.test(t)?"tl":/anlaştın|tanındın/.test(t)?"me":"pf";
 const gzClean=t=>t.replace(/[\p{Extended_Pictographic}\u{1F1E6}-\u{1F1FF}️‍]/gu,"").replace(/\s{2,}/g," ").replace(/^[^\wÇĞİÖŞÜçğıöşü"(]+/u,"").trim();
 const gzUp=b=>b?b.charAt(0).toLocaleUpperCase("tr")+b.slice(1):"";
 function gzSplit(t){t=gzClean(t);const i=t.search(/[:;]/);if(i>8&&i<80)return[t.slice(0,i),gzUp(t.slice(i+1).trim())];const j=t.search(/[,(]/);return j>8?[t.slice(0,j),gzUp(t.slice(j).replace(/^[,\s]+/,""))]:[t,""]}
@@ -642,25 +661,40 @@ const GZI=(()=>{const st='fill="none" stroke="#2b1f12" stroke-linecap="round" st
 // resim boyu viewBox oranından: kayan kutuda yüksekliği çökmesin
 const gzImg=v=>{const m=v.match(/viewBox="0 0 (\d+) (\d+)"/);return v.replace("<svg ",`<svg class="img" width="${m[1]}" height="${m[2]}" style="aspect-ratio:${m[1]}/${m[2]}" `)};
 const GZ_ILAN=[["Grasse Cam Atölyesi","El üfleme kristal şişeler, ısmarlama kapaklar.","Her boyda, her renkte"],["Anadolu Gül Yağı","Isparta vadisinden taze damıtma.","Kilosu borsa fiyatına"],["Saf Etanol %96","Kokusuz, gümrüklü, damacana ile.","Kapıya teslim"],["Koklama Kartı Matbaası","Logolu mouillette, bin adedi uygun.","Siparişler bir haftada"],["Kehribar ve Oud Ticarethanesi","Uzak Doğu'dan nadir reçineler.","Numune için mektup yazınız"]];
-const GZ_IC={hm:"gul",bu:"kure",si:"mektup",rf:"dukkan",mu:"dukkan",tl:"terazi",me:"sise",pf:"portre"};
-const GZ_EK={hm:"Borsa çevrelerinde bu hareket dikkatle izleniyor.",bu:"Şirket yöneticileri yeni mağazaların ilk yıl temkinli satacağını söylüyor.",si:"Muhabirimizin öğrendiğine göre şirket numuneleri titizlikle koklayacak.",rf:"Satıcılar rafta yer açıldığını, yeni formüllere kapının aralık olduğunu belirtiyor.",mu:"Piyasada bu gelişmenin parfümatörlerin itibarına yansıyacağı konuşuluyor.",tl:"Telif sözleşmesinin bitmesiyle formül yeniden pazara çıktı.",me:"Atölyeden yapılan açıklamada başarının sabırlı çalışmanın ürünü olduğu vurgulandı.",pf:"Rakip atölyeler bu hamleyi yakından takip ediyor."};
-function gzPanel(x,k,sp){const tp=gzTip(x.t),[h,b]=gzSplit(x.t),tone=["a","","k","a","o",""][k%6],big=sp>=3,ic=GZ_IC[tp];
+const GZ_IC={cik:"sise",kad:"portre",rek:"kure",mo:"imbik",hm:"gul",bu:"kure",si:"mektup",rf:"dukkan",mu:"dukkan",tl:"terazi",me:"sise",pf:"portre"};
+const GZ_EK={cik:"Eleştirmenler ilk şişeleri koklamak için sırada.",kad:"Rakip atölyeler bu gelişmeyi yakından izliyor.",rek:"Hissedarlar sonuçtan memnun.",mo:"Laboratuvarlar bu molekülün peşine düştü.",hm:"Borsa çevrelerinde bu hareket dikkatle izleniyor.",bu:"Şirket yöneticileri yeni mağazaların ilk yıl temkinli satacağını söylüyor.",si:"Muhabirimizin öğrendiğine göre şirket numuneleri titizlikle koklayacak.",rf:"Satıcılar rafta yer açıldığını, yeni formüllere kapının aralık olduğunu belirtiyor.",mu:"Piyasada bu gelişmenin parfümatörlerin itibarına yansıyacağı konuşuluyor.",tl:"Telif sözleşmesinin bitmesiyle formül yeniden pazara çıktı.",me:"Atölyeden yapılan açıklamada başarının sabırlı çalışmanın ürünü olduğu vurgulandı.",pf:"Rakip atölyeler bu hamleyi yakından takip ediyor."};
+function gzPanel(x,k,sp){const tp=x.tp||gzTip(x.t),[h,b]=x.h?[gzClean(x.h),gzClean(x.b)]:gzSplit(x.t),tone=["a","","k","a","o",""][k%6],big=sp>=3,ic=GZ_IC[tp];
  return `<div class="p ${tone} s${sp} m1"><span class="d">GÜN ${x.d}</span><h4>${esc(h)}</h4><div class="x">${ic?`<div class="${k%2?"gfl":"gfr"}">${gzImg(GZI[ic])}</div>`:""}<p class="${big?"dc":""}">${esc(b?b+(/[.!?)]$/.test(b)?"":"."):"")} ${GZ_EK[tp]}</p></div></div>`}
+// 📰 sabit köşeler: en çok satanlar, analist, müşteri yorumları (oyun verisinden hesaplanır)
+const s30=it=>it.hs.slice(-30).reduce((a,x)=>a+x,0);
+function gzSatis(){const E=EV(),all=[];SIR.forEach(r=>E.cos[r[0]].items.forEach(it=>all.push({it,c:r[0],k:s30(it)})));return all.sort((a,b)=>b.k-a.k)}
+function gzEnCok(A){const top=A.filter(x=>x.k>0).slice(0,5),pf={};A.forEach(x=>{if(x.it.by!=="ev")pf[x.it.by]=(pf[x.it.by]||0)+x.k});const bp=Object.entries(pf).sort((a,b)=>b[1]-a[1])[0];
+ return `<div class="p k s3 m1"><h4>En Çok Satanlar</h4><span class="d">SON 30 GÜN</span>${top.length?`<table><thead><tr><th>Parfüm</th><th>Parfümatör</th><th class="n">şişe</th></tr></thead><tbody>${top.map((x,i)=>`<tr${x.it.by==="me"?' style="font-weight:700"':""}><td>${i+1}. ${esc(x.it.name)}<br><small>${esc(SIRD(x.c).n)}</small></td><td>${esc(x.it.by==="ev"?"şirketin kendisi":pfNm(x.it.by))}</td><td class="n">${x.k.toLocaleString("tr-TR")}</td></tr>`).join("")}</tbody></table>`:`<div class="x"><i>Henüz satış yok.</i></div>`}${bp?`<div class="x"><p><b>Ayın parfümatörü:</b> ${esc(pfNm(bp[0]))}, parfümleri ${bp[1].toLocaleString("tr-TR")} şişe sattı.</p></div>`:""}</div>`}
+function gzAnaliz(A){const c=A.filter(x=>x.k>0).slice(0,3);if(!c.length)return"";const x=c[Math.floor(MAG.day/10)%c.length],it=x.it,C=SIRD(x.c),fm=(it.fams||[[it.fam,100]]).slice(0,3).map(([f,v])=>`${f} %${v}`).join(", "),sy=it.sy!=null?syBand(it.sy):null,mj=it.fiyat&&it.unit?Math.round((1-it.unit/it.fiyat)*100):null;
+ const yor=[it.kal>=70?"tende sabahtan akşama kalıyor":it.kal<40?"tende çabuk sönüyor":"kalıcılığı ortalama",it.yay>=70?"girdiği odayı dolduruyor":it.yay<40?"yakın tende kalan, sessiz bir koku":"yayılımı dengeli",(it.gp||0)>=65?"formül ustalıklı kurulmuş":(it.gp||0)<45?"formülde acemilik seziliyor":"formül sağlam ama sıradan"];
+ return `<div class="p a s3 m1"><h4>Analistler İnceledi</h4><div class="x"><div class="gfr" style="width:30%">${gzImg(GZI.terazi)}</div><p>Analistlerimiz bu hafta <b>${esc(it.name)}</b> parfümünü inceledi (${esc(it.by==="ev"?C.n:pfNm(it.by))}, ${esc(C.n)} rafında). Aileleri: ${esc(fm)}. ${it.conc||""} yoğunlukta; kalıcılık ${it.kal}, yayılım ${it.yay}${sy?`, siyaj ${sy.toLowerCase()}`:""}${it.gp!=null?`, genel puan ${it.gp}`:""}.</p><p>Yorumları: ${yor.join("; ")}.${mj!=null?` Şişesi ${tl(it.fiyat)}, maliyetin üstünde %${mj} kâr bırakıyor.`:""} Son 30 günde ${x.k.toLocaleString("tr-TR")} şişe sattı.</p></div></div>`}
+function gzYorum(A){const c=A.filter(x=>x.k>0),pick=c.filter(x=>x.it.by==="me").slice(0,2).concat(c.filter(x=>x.it.by!=="me")).slice(0,3);if(!pick.length)return"";
+ const rows=pick.map((x,i)=>{const it=x.it,C=SIRD(x.c),st=EV().cos[x.c],ul=C.ulke.concat(st.ul4?[st.ul4]:[]),U=ULD(ul[(MAG.day+i)%ul.length]),mt=MTD(C.mt[(MAG.day+i)%C.mt.length]),sev=U.fam.includes(it.fam);
+  let y=Math.round(it.sc/2)+(sev?1:0)-(it.kal<40?1:0);y=Math.max(1,Math.min(5,y));
+  const t=y>=4?[sev?`Tam bizim sevdiğimiz ${it.fam.toLowerCase()} koku.`:"Beklediğimden çok daha güzel çıktı.",it.kal>=60?"Sabah sıktım, akşam hâlâ duyuluyor.":"Şişesi de çok zarif."]:y>=3?["Güzel ama fiyatına göre sıradan.",it.yay<45?"Biraz daha yayılsa iyi olurdu.":"Arkadaşlarım sordu, hoşlarına gitti."]:["Bana göre değil.",it.kal<45?"Öğlene kadar uçup gidiyor.":sev?"Ailesi güzel ama ağır geldi.":`Biz burada ${U.fam[0].toLowerCase()} kokuları severiz.`];
+  return `<p><span class="yz">${"★".repeat(y)}${"☆".repeat(5-y)}</span> <b>${esc(it.name)}</b> · ${U.fl} ${esc(U.n)}, ${esc(mt?mt.n.toLowerCase():"müşteri")}: <i>“${t.join(" ")}”</i></p>`}).join("");
+ return `<div class="p o s3 m1"><h4>Müşteri Yorumları</h4><div class="x"><div class="gfl" style="width:26%">${gzImg(GZI.mektup)}</div>${rows}</div></div>`}
 function gazeteHtml(){const E=EV(),N=(RK.news||[]),sea=SEAS[Math.floor(MAG.day/30)%4],tf=trendFam();
  const imp=N.find(x=>/anlaştın|büyüdü|tanındın|ile anlaştı/.test(x.t))||N[0],[mh,mb]=imp?gzSplit(imp.t):["Koku Dünyasında Sessiz Bir Sabah",""];
  const ks=Object.keys(NB).filter(k=>!NB[k].mol&&MAG.mkt&&MAG.mkt[k]),mv=ks.map(k=>({k,m:mktOf(k).m})).sort((a,b)=>b.m-a.m),pr=k=>tl(Math.round(mktPrice(k)/100)),row=x=>`<tr><td>${esc(NB[x.k].tr)}</td><td class="n">${pr(x.k)}</td><td class="n">${x.m>=1?"▲":"▼"}%${Math.round(Math.abs(x.m-1)*100)}</td></tr>`;
  const top=SIR.map(r=>{const st=E.cos[r[0]];return{c:r[0],k:st.items.reduce((a,it)=>a+it.hs.slice(-30).reduce((x,y)=>x+y,0),0)}}).sort((a,b)=>b.k-a.k)[0];
  const pr2=PFR.map(p=>({id:p[0],n:pfNm(p[0]),w:worldOf(p[0]).length,d:SIR.reduce((a,r)=>a+E.cos[r[0]].items.concat(E.cos[r[0]].past).filter(x=>x.by===p[0]).length,0)})).sort((a,b)=>b.w-a.w||b.d-a.d);
  const il=(k,sp)=>{const a=GZ_ILAN[(MAG.day+k)%GZ_ILAN.length];return `<div class="p a s${sp} m1"><div class="ilan"><span class="d">— İLAN —</span><b>${esc(a[0])}</b>${esc(a[1])}<br><i>${esc(a[2])}</i></div></div>`};
- const news=N.filter(x=>x!==imp&&!/depoya geldi/.test(x.t)).slice(0,10);
+ const GZ=(E.gz||[]),news=N.filter(x=>x!==imp&&!/depoya geldi/.test(x.t)&&!(/^🧪/.test(x.t)&&GZ.some(g=>g.nm&&x.t.includes(g.nm)))).concat(GZ).sort((a,b)=>b.d-a.d).slice(0,12),A=gzSatis();
  let h=`<div class="gz" lang="tr"><div class="gg">
  <div class="p a s6 mast"><div class="t">Parfümatör Gazetesi</div><div class="u"><span>Sayı ${MAG.day+1}</span><span>Gün ${MAG.day} · ${sea}</span><span>Koku dünyasının en eski haber kaynağı</span><span>Fiyatı 5 kuruş</span></div></div>
  <div class="p k s4"><span class="d">MANŞET${imp?` · GÜN ${imp.d}`:""}</span><h3>${esc(mh)}</h3><div class="x x2"><div class="gfr" style="width:40%">${gzImg(GZI.sise)}</div><p class="dc">${esc(mb?mb+(/[.!?)]$/.test(mb)?"":"."):"")} Koku dünyası bu haberle çalkalanıyor. Piyasada ${SIR.length} şirket ve ${PFR.length} parfümatör yarışırken bu mevsimin gözdesi ${esc(tf)} ailesi oldu. Atölyelerde ışıklar geç saatlere kadar yanıyor; şirketler yeni formül, müşteriler yeni koku bekliyor.</p><p>Gazetemizin muhabirleri borsadan mağazalara kadar her köşeyi dolaştı. Hammadde fiyatlarından şirketlerin büyümesine, rakip atölyelerin hamlelerinden siparişlere kadar günün bütün haberleri bu sayfalarda.</p></div></div>
  <div class="p a s2 r2"><h4>Hammadde Borsası</h4><div class="x">${gzImg(GZI.imbik)}<p><b>Mevsimin gözdesi ${esc(tf)}.</b> Bu aileden notalara talep arttı.</p></div>${mv.length?`<table><thead><tr><th>Pahalı</th><th class="n">10 ml</th><th class="n">fark</th></tr></thead><tbody>${mv.slice(0,4).map(row).join("")}</tbody></table><table><thead><tr><th>Kelepir</th><th class="n">10 ml</th><th class="n">fark</th></tr></thead><tbody>${mv.slice(-4).reverse().map(row).join("")}</tbody></table>`:`<div class="x"><i>Borsa henüz açılmadı.</i></div>`}</div>
  ${top&&top.k?`<div class="p o s2 m1"><h4>Ayın Şirketi</h4><div class="x"><div class="gfr" style="width:46%">${gzImg(GZI.madalya)}</div><p><b>${esc(SIRD(top.c).n)}</b> son 30 günde ${top.k.toLocaleString("tr-TR")} şişe satarak zirveye oturdu. Mağazaları: ${SIRD(top.c).ulke.map(u=>esc(ULD(u).n)).join(", ")}.</p></div></div>`:""}
  <div class="p a s2"><h4>Dünya Şöhreti</h4><div class="x"><div class="gfl" style="width:34%">${gzImg(GZI.portre)}</div></div><table><thead><tr><th>Parfümatör</th><th class="n">ülke</th><th class="n">anlaşma</th></tr></thead><tbody>${pr2.map(x=>`<tr${x.id==="me"?' style="font-weight:700"':""}><td>${esc(x.n)}</td><td class="n">${x.w}</td><td class="n">${x.d}</td></tr>`).join("")}</tbody></table></div>`;
+ h+=gzEnCok(A)+(gzAnaliz(A)||`<div class="p a s3 m1"><h4>Analistler İnceledi</h4><div class="x"><p><i>Rafta incelenecek parfüm yok.</i></p></div></div>`);
  // kutular satırları boşluksuz doldursun: her satır 6 sütun
- const it=[];news.forEach((x,k)=>{it.push(sp=>gzPanel(x,k,sp));if(k===2)it.push(sp=>il(0,sp));if(k===6)it.push(sp=>il(2,sp))});
+ const it=[],yz=gzYorum(A);if(yz)it.push(sp=>yz.replace(" s3 "," s"+sp+" "));news.forEach((x,k)=>{it.push(sp=>gzPanel(x,k,sp));if(k===2)it.push(sp=>il(0,sp));if(k===6)it.push(sp=>il(2,sp))});
  if(!news.length)it.push(sp=>`<div class="p s${sp}"><div class="x"><p>Henüz haber yok. Atölyeler çalışıyor, şirketler yeni formüller bekliyor.</p></div></div>`,sp=>il(0,sp));
  const ROWS=[[3,3],[2,2,2],[4,2],[2,2,2],[2,4]];let i=0,r=0;
  while(i<it.length){let row=ROWS[r++%ROWS.length];const left=it.length-i;if(left<row.length)row=left===1?[6]:[3,3];row.forEach(sp=>{h+=it[i++](sp)})}
@@ -818,7 +852,7 @@ function akorTry(){const U=UI.akr;if(U.s.some(x=>!x.k)||U.s[0].k===U.s[1].k){U.r
   else{const fams=[...new Set(a.ks.filter(k=>k!==known&&NB[k]).map(k=>NB[k].fam))];sub=`${NB[known].tr} doğru. Eşi şu ailelerden birinde: ${fams.join(", ")}.`}
   r={t:"near",h:`${a.ic} Bir akorun yarısı gibi duruyor.`,sub}}
  else if(b.dev<=akTol()){if(b.found)r={t:"old",h:`${a.ic} ${a.n} akoru yine oluştu.`,sub:"Bu akoru zaten biliyorsun."};
-  else{LAB.akor[a.id]={t:Date.now(),n:U.tries};regAkor(a.id);labSave();xpGain(20);const nk=NB[AKEY(a.id)];r={t:"win",h:`${a.ic} Yeni akor: ${a.n}!`,sub:a.why,why:`Artık formül masasında ${LNL[nk.l]} notalar arasında.`}}}
+  else{LAB.akor[a.id]={t:Date.now(),n:U.tries};RK.news.unshift({d:MAG.day,t:`🔬 Yeni akor bulundu: ${a.n}; ${MAG.co} laboratuvarında ${U.tries} denemede çözüldü`});regAkor(a.id);labSave();xpGain(20);const nk=NB[AKEY(a.id)];r={t:"win",h:`${a.ic} Yeni akor: ${a.n}!`,sub:a.why,why:`Artık formül masasında ${LNL[nk.l]} notalar arasında.`}}}
  else{const w=UI.akr.s.map(x=>({nm:NB[x.k].tr,df:x.d-akIdeal(x.k)})).sort((x,y)=>Math.abs(y.df)-Math.abs(x.df))[0];r={t:"ratio",h:`${a.ic} İkisi uyuyor, oran tutmadı.`,sub:`Sapma ${b.dev} damla, en fazla ${akTol()} olabilir. ${w.nm} ${w.df>0?"fazla":"az"} geliyor.`}}
  U.res=r}
 
@@ -842,7 +876,7 @@ function labTry(){const U=UI.lab;if(U.s.some(x=>!x.k)||new Set(U.s.map(x=>x.k)).
  if(!b||b.m===0)r={t:"no",h:"Karışım bulanıklaştı, hiçbir bilinen moleküle benzemedi.",sub:"Her molekül üç hammadde grubundan kurulur. Defterdeki ipuçlarına bak."};
  else if(b.m<3)r={t:"near",h:`${d.ic} Bir şeye benziyor: “${d.tease}”`,sub:`${b.m} hammadde doğru. Eksik olan: ${d.sd[b.missSl]}.`};
  else if(b.dev<=labTol()){if(b.found)r={t:"old",h:`${d.ic} ${d.n} yine oluştu.`,sub:"Bu molekülü zaten biliyorsun."};
-  else{LAB.mol[b.id]={t:Date.now(),n:U.tries};regMol(b.id);labSave();xpGain(20);r={t:"win",h:`${d.ic} Yeni molekül: ${d.n}!`,sub:d.his,why:d.why+` Artık formül masasında ${LNL[d.l]} notalar arasında.`}}}
+  else{LAB.mol[b.id]={t:Date.now(),n:U.tries};RK.news.unshift({d:MAG.day,t:`🔬 Yeni molekül bulundu: ${d.n}; ${MAG.co} laboratuvarında ${U.tries} denemede çözüldü`});regMol(b.id);labSave();xpGain(20);r={t:"win",h:`${d.ic} Yeni molekül: ${d.n}!`,sub:d.his,why:d.why+` Artık formül masasında ${LNL[d.l]} notalar arasında.`}}}
  else{const w=b.items.slice().sort((x,y)=>Math.abs(y.df)-Math.abs(x.df))[0];r={t:"ratio",h:`${d.ic} Hammaddeler doğru, oranlar tutmadı.`,sub:`Sapma ${b.dev} damla, en fazla ${labTol()} olabilir. En çok ${w.nm} ${w.df>0?"fazla":"az"} geliyor.`}}
  U.res=r}
 
