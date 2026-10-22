@@ -1409,8 +1409,10 @@ const KSK={
  ceo:{n:"CEO",sk:[["fire","Fire","Üretimde ziyan olan hammadde azalır"],["iscilik","İşçilik","Şişe başı işçilik gideri azalır"],["nakliye","Nakliye","Şişe başı nakliye gideri azalır"],["alim","Hammadde alımı","Hammaddeyi %15'e kadar ucuza alır"],["vergi","Vergi","Satış tarafı gelince: vergi yükü azalır"],["satis","Satış","Satış tarafı gelince: satış hızı"],["ihracat","İhracat","Satış tarafı gelince: yurt dışı satış"],["koleks","Koleksiyoncu","Satış tarafı gelince: nadir parfüm alıcıları"],["pay","Pay alma","Satış tarafı gelince: pazar payı"],["otel","Otel","Satış tarafı gelince: otel siparişleri"],["moda","Moda merkezi","Satış tarafı gelince: moda tutkunları"],["doga","Doğa tutkunları","Satış tarafı gelince: dağcı ve sörfçü müşteriler"]]}};
 const K_ACTIVE=["fire","iscilik","nakliye","alim"],KNM={parf:["Defne Aras","Kerem Yalın","Ece Soylu","Selim Tunç"],kim:["Deniz Ural","Onur Sezer","Gül Tekin","Barış Erol"],ceo:["Leyla Karaca","Mira Esen","Tolga Sezer","Nazlı Erkan"]};
 function ceoPick(lv){const ks=KSK.ceo.sk.map(x=>x[0]).sort(()=>Math.random()-.5).slice(0,3),o={};ks.forEach(k=>o[k]=lv);return o}
-function kadroNew(lv){const o={pts:0,lv:1,xp:0};["parf","kim"].forEach(r=>{o[r]={n:KNM[r][rnd(4)],sk:{}};KSK[r].sk.forEach(([k])=>o[r].sk[k]=lv)});o.ceo={n:KNM.ceo[rnd(4)],sk:ceoPick(lv)};return o}
-let KD=lsGet("p2.kadro");if(!KD||!KD.parf||!KD.kim||!KD.ceo)KD=kadroNew(3);if(KD.parf.sk.okuma==null){KD.parf.sk.okuma=KD.parf.sk.trend||3;delete KD.parf.sk.trend}
+// oyuncunun adı (CEKO 2026-10-22)
+const ME_NM="Petrichor MassaiMara";
+function kadroNew(lv){const o={pts:0,lv:1,xp:0};["parf","kim"].forEach(r=>{o[r]={n:r==="parf"?ME_NM:KNM[r][rnd(4)],sk:{}};KSK[r].sk.forEach(([k])=>o[r].sk[k]=lv)});o.ceo={n:KNM.ceo[rnd(4)],sk:ceoPick(lv)};return o}
+let KD=lsGet("p2.kadro");if(!KD||!KD.parf||!KD.kim||!KD.ceo)KD=kadroNew(3);KD.parf.n=ME_NM;if(KD.parf.sk.okuma==null){KD.parf.sk.okuma=KD.parf.sk.trend||3;delete KD.parf.sk.trend}
 function kdSave(){lsSet("p2.kadro",KD)}
 const kf=(r,k)=>{if(r==="ceo")return 0;const v=KD[r].sk[k];return v?(v-1)/19:0},kAvg=r=>{const v=Object.values(KD[r].sk);return v.reduce((a,x)=>a+x,0)/v.length};
 const kTier=()=>{const a=kAvg("parf");return a<7?0:a<14?1:2};
@@ -1438,7 +1440,7 @@ function kadroHtml(){const col={parf:"#7b2d1e",kim:"#4f6a2e",ceo:"#2f4a6a"},P=PZ
 // ===== Satış tarafı 5a: kasa, üretim, depo kartı =====
 const START_CASH=300000,BATCHES=[50,100,250,500],GENDERS=["Kadın","Erkek","Unisex"];
 const G_FAM={"Çiçeksi":0,"Pudramsı":0,"Meyvemsi":0,"Tatlımsı":0,"Deri":1,"Odunsu":1,"Baharatlı":1,"Aromatik":1};
-let MAG=lsGet("p2.mag");if(!MAG||MAG.cash==null)MAG={cash:START_CASH,co:"Atölye "+KD.parf.n.split(" ")[1],items:[],day:0};
+let MAG=lsGet("p2.mag");if(!MAG||MAG.cash==null)MAG={cash:START_CASH,co:ME_NM,items:[],day:0};MAG.co=ME_NM;
 function magSave(){lsSet("p2.mag",MAG);try{if(G&&G.sel&&G.P)lsSet("p2.g",G)}catch(e){}}
 const magItem=id=>MAG.items.find(x=>x.id===id);
 UI.prod={n:100,g:null};
