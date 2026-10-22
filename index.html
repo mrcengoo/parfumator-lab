@@ -47,6 +47,8 @@ select,input[type=text]{background:#fff;color:#000;border:1px solid var(--rule);
 .note .nm{min-width:0;overflow-wrap:anywhere}
 .fpill{padding:1px 7px;border-radius:7px;color:#000;display:inline-block}
 .note .fam{font:11px var(--fu);color:var(--ink2);margin-left:6px}
+.note .fpill{white-space:nowrap}
+@media (max-width:560px){.note{grid-template-columns:1fr auto;row-gap:2px}.note .nm{grid-column:1/-1;overflow-wrap:normal}.note .fam{display:inline-block;margin-left:6px}.note .pm{min-width:36px;min-height:34px}}
 .num{font:14px var(--fu);font-variant-numeric:tabular-nums;min-width:62px;text-align:right}
 .pm{width:28px;height:28px;border:1px solid var(--rule);background:var(--chip);cursor:pointer;line-height:1;padding:0}
 .chipb{border:0;background:none;color:var(--accent);cursor:pointer;font-size:18px;padding:0 4px}
