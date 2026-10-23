@@ -132,7 +132,12 @@ body{background-color:var(--paper2);background-image:var(--noise),var(--mottle),
 #bnav{display:none}
 .clk .seg button{padding:4px 8px}.clkbar{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:92px;height:26px;padding:0 8px;border:1.5px solid #37898C;border-radius:8px;background:#fff;overflow:hidden;color:#000;font-weight:800;font-size:13px;white-space:nowrap}.clkbar i{position:absolute;left:0;top:0;bottom:0;background:#9DD8D4}.clkbar b{position:relative}.clkbar.tick{animation:clkT .7s ease-out}@keyframes clkT{0%{transform:scale(1.18);background:#FCEEBE}100%{transform:scale(1)}}
 .mapw{border:1px solid var(--rule);background:var(--chip);background-image:var(--noise)}.map{width:100%;height:auto;display:block}.map .city{cursor:pointer}.map .city:focus-visible circle{stroke:var(--accent);stroke-width:3}
-.brsum,.mobbar{display:none}
+.mobbar{display:none}
+.brsum{display:flex;justify-content:space-between;align-items:center;width:100%;box-sizing:border-box;margin:0 0 10px;padding:10px 14px;border-radius:14px;background:#9DD8D4;border:2px solid #37898C;font:800 15px var(--fu,inherit);color:#000;text-align:left;cursor:pointer}
+.brw{display:none}.brw.open{display:block}
+.balL{background:var(--lc);border:1.5px solid var(--lb);border-radius:12px;padding:8px 10px}
+.balL .bar{background:#fff;border-color:var(--lb)}.balL .bar .s{background:color-mix(in srgb,var(--lb) 55%,transparent)}
+.balL .pm{background:#fff}
 @media (max-width:700px){
  .brsum{display:flex;justify-content:space-between;align-items:center;width:100%;box-sizing:border-box;margin:0 0 10px;padding:10px 14px;border-radius:14px;background:#9DD8D4;border:2px solid #37898C;font:800 15px var(--fu,inherit);color:#000;text-align:left;cursor:pointer}
  .brw{display:none}.brw.open{display:block}
@@ -1027,8 +1032,10 @@ const tl=x=>Math.round(x).toLocaleString("tr-TR")+" TL";
 function syLive(){const N=allNotes();if(!N.length)return "";const y=syOf(LAY.flatMap(L=>G.sel[L].map(x=>({k:x.k,p:x.p,l:L}))),G.conc),b=G.brief&&brOf()&&brOf().id===G.brief?brOf():null,C=b?SIRD(b.co):null;
  return `<div class="mnote" style="font-size:15px;color:#000">🌫️ Siyaj: <b>${y.v} · ${syBand(y.v)}</b> <span style="font-size:13px;color:#333">(güçlü notalar %${y.st}${C?`; ${esc(C.n)} ${C.sy.toLowerCase()} istiyor`:""})</span>${y.pen?` <span class="bad">⚠️ boğucu: güçlü notalar formülün yarısını geçti, kalite −${y.pen}</span>`:""}</div>`}
 // 📱 telefon AR-GE düzeni (CEKO 2026-10-23): tek satır sipariş, altta sabit sonuç şeridi; bilgisayarda görünmez
+// terazi katman renkleri (CEKO 2026-10-23)
+const LCOL={t:["#FCEEBE","#FACF71"],m:["#F5BFD2","#e27a9c"],b:["#ecd9c6","#b98a5e"]},LAY_IC={t:"☁️",m:"💐",b:"🌳"};
 function brSumHtml(){const b=brOf();if(!b)return `<div class="brsum"><span>📨 Açık sipariş yok</span></div>`;const C=SIRD(b.co);
- return `<button class="brsum" data-act="brtog" aria-expanded="${!!UI.brOpen}"><span>📨 ${esc(C.n)}${b.ac?" 🏁":""} · ⏳ ${b.end-MAG.day} gün</span><span>${UI.brOpen?"▴":"▾"}</span></button>`}
+ return `<button class="brsum" data-act="brtog" aria-expanded="${!!UI.brOpen}"><span>📨 Sipariş: ${esc(C.n)}${b.ac?" 🏁":""} · ⏳ ${b.end-MAG.day} gün</span><span style="white-space:nowrap">${UI.brOpen?"kapat ▴":"aç ▾"}</span></button>`}
 function mobBarHtml(){const N=allNotes();if(G.done||!N.length)return "";const W=N.reduce((a,x)=>a+x.p,0)||1,sea=[1,2,3,4].map(i=>N.reduce((a,x)=>a+NB[x.k]["s"+i]*x.p,0)/W),z=sezOf(sea),
  y=syOf(LAY.flatMap(L=>G.sel[L].map(x=>({k:x.k,p:x.p,l:L}))),G.conc),c=costs(60,3),f=c.ham+c.fire+c.alk+c.isc+c.nak,b=G.brief&&brOf()&&brOf().id===G.brief?brOf():null,bud=b?SISE_BUT[SIRD(b.co).fg]:[40,110],o=orgPct(N),ok=complete();
  return `<div class="mobbar"><div class="mbs"><span>${SEZ_IC[z]||"🍂"} ${esc(z||"")}</span><span>🌱 %${o}</span><span>🌫️ ${y.v} ${esc(syBand(y.v))}</span><span>💰 ${tl(f+15+Math.round((bud[0]+bud[1])/2))}</span></div>
@@ -2320,9 +2327,9 @@ function render(){if(["uretim","depo","magaza"].includes(UI.tab))UI.tab="genel";
   h+=`</div>${!full&&!G.done&&!G.lock?`<div class="add"><span class="lbl" style="align-self:center">Nota ekle</span><div class="npick"><button class="btn ghost npb" data-act="npick" data-l="${L}" aria-expanded="${UI.npick===L}">${LN[L]} katmandan seç… ▾</button>${UI.npick===L?`<div class="nplist">${(()=>{const row=k=>`<button class="npo" data-act="npadd" data-l="${L}" data-k="${k}">${fpill(esc(NB[k].tr),NB[k].fam)}<span class="npi">${SEZ_NOTE(k)} ${orgTip(k)==="dogal"?"🌱":"🧪"} · ${NB[k].price} TL · güç ${NB[k].g}</span></button>`;
    return Object.keys(FAM).map(f=>{const ks=byL[L].filter(k=>NB[k].fam===f&&!NB[k].mol&&!S.some(x=>x.k===k));return ks.length?`<div class="npg">${f}</div>${ks.map(row).join("")}`:""}).join("")+(()=>{const ms=byL[L].filter(k=>NB[k].mol&&!S.some(x=>x.k===k));return ms.length?`<div class="npg">🧪 Keşiflerim</div>${ms.map(row).join("")}`:""})()})()}</div>`:""}</div></div>`:""}</div>`});
  h+=`<div class="muted" style="margin-top:8px">Masada: <b>${esc(G.pf)}</b>. Sezgi bölgesi ±${G.P.zone} · Koklat hakkı ${G.P.hak} · kalite tavanı ${G.P.cap}. Yetenekler Kadro sekmesinden yükselir.</div></div><div class="sheet"><div class="spread"><h2>Terazi</h2><span class="lbl">aile: ${esc(tg.lab)}</span></div>
- <div class="muted">Ailelerin payı: ${fs.slice(0,4).map(([f,v])=>`${esc(f)} %${Math.round(v/ft*100)}`).join(" · ")||"—"}</div><div class="bal">`;
+ <div class="muted">Ailelerin payı:</div><div class="chips" style="margin:2px 0 6px">${fs.slice(0,6).map(([f,v])=>fpill(`${FAM_IC[f]||""} ${esc(f)} %${Math.round(v/ft*100)}`,f)).join("")||"—"}</div><div class="bal">`;
  LAY.forEach((L,i)=>{const [zl,zh]=zoneOf(i,T),v=G.L[L];
-  h+=`<div><div class="spread"><b>${LN[L]}</b><span class="row" style="gap:4px"><button class="pm" data-act="l-" data-l="${L}" aria-label="${LN[L]} katmanı azalt" ${G.done?"disabled":""}>−</button><span class="num">%${fmt(v)}</span><button class="pm" data-act="l+" data-l="${L}" aria-label="${LN[L]} katmanı artır" ${G.done?"disabled":""}>+</button></span></div>
+  h+=`<div class="balL" style="--lc:${LCOL[L][0]};--lb:${LCOL[L][1]}"><div class="spread"><b>${LAY_IC[L]} ${LN[L]} notalar</b><span class="row" style="gap:4px"><button class="pm" data-act="l-" data-l="${L}" aria-label="${LN[L]} katmanı azalt" ${G.done?"disabled":""}>−</button><span class="num">%${fmt(v)}</span><button class="pm" data-act="l+" data-l="${L}" aria-label="${LN[L]} katmanı artır" ${G.done?"disabled":""}>+</button></span></div>
   <div class="bar" role="img" aria-label="${LN[L]} katman %${Math.round(v)}, sezgi bölgesi %${zl}–${zh}"><div class="s" style="width:${v}%"></div><div class="z" style="left:${zl}%;width:${zh-zl}%"></div><div class="v" style="left:calc(${v}% - 1px)"></div>${G.done&&!rdWait()?`<div class="t" style="left:${T[i]}%"></div>`:""}</div>
   <input type="range" id="r-${L}" data-rng="${L}" min="5" max="80" step="1" value="${Math.round(v)}" aria-label="${LN[L]} katman yüzdesi" style="width:100%" ${G.done?"disabled":""}>
   <div class="ax"><span>0</span><span>sezgi: %${zl}–${zh}</span><span>100</span></div></div>`});
