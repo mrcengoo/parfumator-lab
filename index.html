@@ -281,7 +281,7 @@ h1,h2,h3,.brand{color:#000;font-weight:700}
 input[type=search]{background:#fff!important;color:#000!important;border:1.5px solid #000;border-radius:8px;padding:6px 10px;font:inherit;color-scheme:light}
 input[type=search]::placeholder{color:#444;opacity:1}
 .pfhd{display:flex;gap:10px;align-items:center;margin-bottom:4px}.pfhd .prt{width:96px;height:104px;flex:none;background:#FBF8F2;border:1px solid #000;border-radius:10px}.pfhd b{font-size:16px}
-.cohd{display:flex;gap:10px;align-items:center;margin-bottom:6px}.cohd .logo{width:84px;flex:none;display:block;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.15))}
+.cohd{display:flex;gap:10px;align-items:center;margin-bottom:6px}.cohd .mask{width:84px;flex:none;display:block;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.15))}
 table.fin{width:100%;border-collapse:collapse;font-size:14px}table.fin th{text-align:left;font:700 12px var(--fu);letter-spacing:.08em;padding:8px 0 2px;border-bottom:2px solid var(--p5b)}table.fin td{padding:3px 0;border-bottom:1px dotted #ddd}table.fin td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:8px}
 
 /* 📰 Gazete: örnek görseldeki eski gazete kolajı; renkler görselden ölçüldü (kâğıt #d2bd9a/#cbb18b, açık kutu #f1deb7/#e1cdac, koyu kutu #b69a74, leke #95683f, mürekkep #2b1f12) */
@@ -877,12 +877,71 @@ const LOGO=(()=>{const K="#2b2420",PA="#F7EFDD",
   txt=L.map((s,j)=>`<text x="50" y="${top+j*13}" text-anchor="middle" font-family="Georgia,serif" font-weight="700" font-size="${fs(s).toFixed(1)}" fill="${K}">${s.replace("·","&amp;")}</text>`).join(""),iy=top+(L.length-1)*13+6,sc=Math.min(1.05,(112-iy-14)/60);
   return `<svg class="logo" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="${fr(t,2)}" fill="${PA}" stroke="${K}" stroke-width="2.2"/><path d="${fr(t,6)}" fill="none" stroke="${K}" stroke-width=".8"/>${txt}<g transform="translate(${(50-30*sc).toFixed(1)} ${iy+2}) scale(${sc.toFixed(3)})">${I[ic]}</g>
   <path d="M30 ${118-5}H70" stroke="${K}" stroke-width=".6"/><text x="50" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="6.2" letter-spacing=".6" fill="${K}">${alt?up(alt)+" · ":""}${yr}</text></svg>`}})();
+// şirket maskotları: renkli çizgi film hayvanlar (kalın siyah çizgi, düz renk, kocaman gözler)
+const MASK=(()=>{const K="#1d1a1a",W="#fff",
+ P=(d,f,w=2.2)=>`<path d="${d}" fill="${f}" stroke="${K}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`,
+ C=(x,y,r,f,w=2.2)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${K}" stroke-width="${w}"/>`,
+ E=(x,y,rx,ry,f,w=2.2,t="")=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${f}" stroke="${K}" stroke-width="${w}"${t}/>`,
+ eye=(x,y,s=1,dx=1)=>E(x,y,5.5*s,7.5*s,W,2)+`<ellipse cx="${x+dx*s}" cy="${y+1.5*s}" rx="${3*s}" ry="${4.6*s}" fill="${K}"/><path d="M${x+dx*s} ${y+1.5*s}L${x+dx*s+2.6*s} ${y-1.8*s}L${x+dx*s+.4*s} ${y-3.2*s}Z" fill="${W}"/>`,
+ eyes=(y,g=9,s=1)=>eye(50-g,y,s,1)+eye(50+g,y,s,1),
+ smile=(y,w=10,f="#E85A6B")=>P(`M${50-w} ${y}Q50 ${y+w*1.3} ${50+w} ${y}Q50 ${y+w*.35} ${50-w} ${y}Z`,K,1.8)+`<path d="M${50-w*.45} ${y+w*.75}Q50 ${y+w*.5} ${50+w*.45} ${y+w*.75}Q50 ${y+w*1.05} ${50-w*.45} ${y+w*.75}Z" fill="${f}"/>`,
+ body=(f,extra="")=>P("M16 101C18 82 32 74 50 74C68 74 82 82 84 101Z",f)+extra,
+ glove=(x,y,r=0)=>`<g transform="rotate(${r} ${x} ${y})">${P(`M${x-6} ${y+6}C${x-9} ${y} ${x-8} ${y-6} ${x-4} ${y-7}L${x-4} ${y-12}C${x-4} ${y-15} ${x} ${y-15} ${x} ${y-12}L${x} ${y-14}C${x} ${y-17} ${x+4} ${y-17} ${x+4} ${y-14}L${x+4} ${y-12}C${x+4} ${y-14} ${x+8} ${y-14} ${x+8} ${y-11}L${x+8} ${y-4}C${x+11} ${y-6} ${x+13} ${y-3} ${x+10} ${y}C${x+8} ${y+4} ${x+6} ${y+7} ${x+2} ${y+8}Z`,W,1.8)}</g>`,
+ M={
+ aroma:["#FCEEBE",()=>`${E(28,58,13,9,"#D9F1F8",1.8,' transform="rotate(-30 28 58)"')}${E(72,58,13,9,"#D9F1F8",1.8,' transform="rotate(30 72 58)"')}
+ ${body("#FFC93C",P("M22 88H78","none",0)+`<path d="M24 86Q50 80 76 86L80 94Q50 88 20 94Z" fill="${K}"/>`)}
+ <path d="M42 22Q36 10 30 8M58 22Q64 10 70 8" fill="none" stroke="${K}" stroke-width="2.2"/>${C(30,8,3.5,K,1)}${C(70,8,3.5,K,1)}
+ ${C(50,44,24,"#FFC93C")}${eyes(40)}${smile(52,9)}${C(34,52,3.5,"#F7A0A8",0)}${C(66,52,3.5,"#F7A0A8",0)}
+ ${glove(84,72,15)}${[0,72,144,216,288].map(a=>E(88,52,3,5,"#F58BB0",1.4,` transform="rotate(${a} 88 57)"`)).join("")}${C(88,57,2.5,"#FFC93C",1.2)}`],
+ scent:["#D9F1F8",()=>`${body("#FFF6E4",P("M40 78Q50 86 60 78","none",2))}
+ ${P("M46 22C42 12 48 6 52 12C54 6 60 8 56 18","#FFF6E4",2)}
+ ${C(50,44,23,"#FFF6E4")}${eyes(38)}
+ ${P("M30 52C30 46 70 46 70 52C70 60 30 60 30 52Z","#FFA62B")}${P("M32 53Q50 57 68 53","none",1.6)}
+ ${glove(16,74,-15)}${C(13,58,8,"#FFE14D",2)}${P("M13 50L15 46","none",1.8)}${P("M14 50Q20 46 22 48Q18 52 14 50Z","#7CC36A",1.4)}`],
+ parf:["#F7E1C8",()=>`${body("#E5A85A",P("M30 80Q50 90 70 80L70 86Q50 96 30 86Z","#D9343F",2)+C(50,92,3,"#FFD24A",1.4))}
+ ${C(50,46,23,"#E5A85A")}${P("M28 32C18 34 14 52 20 60C26 58 30 48 30 38Z","#8A5530")}${P("M72 32C82 34 86 52 80 60C74 58 70 48 70 38Z","#8A5530")}
+ ${E(50,56,12,8,"#F6D8A8",2)}${eyes(40)}${C(50,51,4,"#E8434F",1.8)}${P("M43 59Q50 64 57 59","none",1.8)}${P("M48 61L48 64L52 64L52 61","#fff",1.2)}`],
+ essenza:["#FBD9B8",()=>`${body("#F79A3A",P("M38 76L50 84L62 76L62 88L50 82L38 88Z","#C2337A",1.8))}
+ ${P("M30 34L28 12L44 26Z","#F79A3A")}${P("M70 34L72 12L56 26Z","#F79A3A")}${P("M32 28L31 18L39 25Z","#F7B5C5",0)}${P("M68 28L69 18L61 25Z","#F7B5C5",0)}
+ ${C(50,46,23,"#F79A3A")}${E(50,56,10,6,"#FFE3C2",0)}${eyes(41)}${P("M47 51L53 51L50 54Z","#F26D8C",1.4)}${P("M50 54Q46 59 43 56M50 54Q54 59 57 56","none",1.6)}
+ <path d="M38 54L24 51M38 57L24 58M62 54L76 51M62 57L76 58" stroke="${K}" stroke-width="1.3"/>`],
+ lune:["#E7DDF7",()=>`${body("#C9B4F2",C(50,88,6,"#FFE14D",1.6)+`<circle cx="53" cy="86" r="5" fill="#C9B4F2"/>`)}
+ ${E(38,18,7,18,"#C9B4F2",2.2,' transform="rotate(-12 38 18)"')}${E(62,18,7,18,"#C9B4F2",2.2,' transform="rotate(12 62 18)"')}${E(38,20,3,12,"#F5BFD2",0,' transform="rotate(-12 38 20)"')}${E(62,20,3,12,"#F5BFD2",0,' transform="rotate(12 62 20)"')}
+ ${C(50,48,22,"#C9B4F2")}${E(50,58,11,7,"#EFE8FB",0)}${eyes(44)}${E(50,54,3,2.4,"#F26D8C",1.4)}${P("M44 59Q50 63 56 59","none",1.6)}${P("M47 61H53V67H47Z","#fff",1.4)}${P("M50 61V67","none",1)}
+ ${glove(84,72,15)}`],
+ verda:["#DCEBC8",()=>`${body("#67B84A",E(50,90,14,9,"#C8E6A0",0))}
+ ${C(36,30,10,"#67B84A")}${C(64,30,10,"#67B84A")}${E(50,50,28,18,"#67B84A")}
+ ${eye(36,29,1,1)}${eye(64,29,1,1)}${P("M30 54Q50 72 70 54","none",2.2)}${P("M36 58Q50 68 64 58Q50 63 36 58Z","#E85A6B",0)}
+ ${C(28,52,4,"#F7A0A8",0)}${C(72,52,4,"#F7A0A8",0)}
+ ${glove(16,74,-15)}${P("M14 58C8 50 12 40 22 40C24 50 20 56 14 58Z","#2F8F3A",1.8)}${P("M14 58L20 44","none",1.2)}`],
+ noct:["#E2D9EC",()=>`${P("M16 101C10 88 6 78 12 70C18 74 20 70 22 66C26 72 30 72 32 70C38 74 44 74 50 74C56 74 62 74 68 70C70 72 74 72 78 66C80 70 82 74 88 70C94 78 90 88 84 101Z","#5B3F7A")}
+ ${P("M30 36L22 8L44 26Z","#5B3F7A")}${P("M70 36L78 8L56 26Z","#5B3F7A")}${P("M31 30L27 15L39 26Z","#E9A3C0",0)}${P("M69 30L73 15L61 26Z","#E9A3C0",0)}
+ ${C(50,46,22,"#5B3F7A")}${E(50,52,15,12,"#B89ACF",0)}${eyes(42)}${P("M42 56Q50 62 58 56","none",1.8)}${P("M45 58L46 62L48 59M55 58L54 62L52 59","#fff",1.2)}
+ ${C(50,88,6,"#F0B13C",1.6)}`],
+ sahra:["#F6E2BE",()=>`${body("#E9B872",E(50,90,13,9,"#FFF4DF",0))}
+ ${P("M32 36C18 30 12 10 18 4C30 8 38 22 40 30Z","#E9B872")}${P("M68 36C82 30 88 10 82 4C70 8 62 22 60 30Z","#E9B872")}${P("M30 30C22 24 20 14 22 10C28 14 34 22 35 28Z","#F7C6B0",0)}${P("M70 30C78 24 80 14 78 10C72 14 66 22 65 28Z","#F7C6B0",0)}
+ ${C(50,46,21,"#E9B872")}${P("M36 52Q50 70 64 52Q56 48 50 50Q44 48 36 52Z","#FFF4DF",0)}${eyes(42,8,.9)}${E(50,56,3.5,2.6,K,1)}${P("M45 61Q50 64 55 61","none",1.6)}
+ ${glove(84,72,15)}`],
+ bleu:["#CFE6F7",()=>`${body("#2D3F73",E(50,92,15,12,"#fff",0))}
+ ${C(50,46,23,"#2D3F73")}${P("M33 48C33 34 44 34 50 40C56 34 67 34 67 48C67 62 58 66 50 66C42 66 33 62 33 48Z","#fff",0)}
+ ${eyes(45,8,.9)}${P("M42 54Q50 50 58 54L50 62Z","#FFB52E",1.8)}${C(37,56,3,"#F7A0A8",0)}${C(63,56,3,"#F7A0A8",0)}
+ ${P("M30 28C30 18 70 18 70 28Z","#fff",2)}${P("M28 28H72V32H28Z","#2E7DD1",1.8)}${C(50,20,3,"#E8434F",1.2)}
+ ${glove(84,72,15)}`],
+ gul:["#F9D2D6",()=>`${body("#E8343F",[30,44,58,70,38,62].map((x,i)=>C(x,i<4?88:96,3.5,K,0)).join("")+P("M50 74V101","none",2))}
+ <path d="M42 24Q36 12 30 10M58 24Q64 12 70 10" fill="none" stroke="${K}" stroke-width="2.2"/>${C(30,10,3,K,1)}${C(70,10,3,K,1)}
+ ${C(50,46,22,"#2A2A2A")}${eyes(43)}${smile(53,8,"#E85A6B").replace(`fill="${K}"`,`fill="#fff" stroke-opacity=".9"`)}${C(35,54,3.5,"#E8343F",0)}${C(65,54,3.5,"#E8343F",0)}
+ ${glove(16,74,-15)}${P("M14 58L10 44","none",2)}${C(9,42,7,"#E8343F",1.8)}${P("M6 41Q9 37 12 41Q9 45 6 41","none",1.2)}${P("M12 52Q18 48 20 52Q16 55 12 52Z","#5FA84A",1.2)}`],
+ kaya:["#E8D6C4",()=>`${body("#C8333A",`<path d="M30 76V101M40 75V101M60 75V101M70 76V101M18 88H82M18 96H82" stroke="${K}" stroke-width="1.4" opacity=".55"/>`+P("M42 75L50 84L58 75","#F2E3CC",1.8))}
+ ${C(30,26,8,"#9B6438")}${C(70,26,8,"#9B6438")}${C(30,26,4,"#D9A57A",0)}${C(70,26,4,"#D9A57A",0)}
+ ${C(50,46,23,"#9B6438")}${E(50,57,12,9,"#D9A57A",2)}${eyes(41)}${E(50,52,4,3,K,1)}${P("M43 60Q50 66 57 60","none",1.8)}
+ ${glove(84,72,15)}`]};
+ return c=>{const m=M[c]||M.aroma;return `<svg class="mask" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="98" height="98" rx="14" fill="${m[0]}" stroke="${K}" stroke-width="1.5"/><g>${m[1]()}</g></svg>`}})();
 function sirCard(c){const C=SIRD(c),st=EV().cos[c],v=st.view.me??50,back=(UI.coBack||{})[c];
  if(back){const its=st.items.map(it=>({...it,on:1})).concat(st.past);return `<div class="lcard scard" style="border-top:4px solid var(--accent)"><div class="spread"><b>${esc(C.n)} · arka yüz</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Önü</button></div>
   <div class="lbl">Aldığı parfümler</div><div class="scroll"><table><thead><tr><th>Parfüm</th><th>Parfümatör</th><th>Anlaşma</th><th class="n">Satılan</th><th class="n">Stok</th><th class="n">Maliyet</th><th class="n">Fiyat</th><th class="n">Şöhret</th></tr></thead><tbody>${its.map(it=>`<tr${it.by==="me"?' style="font-weight:700"':""}><td>${esc(it.name)}${orgIt(it)>=ORG_MIN?" 🌱":""}${it.on?"":` <span class="mnote">raftan kalktı</span>`}</td><td style="font-size:13.5px">${esc(pfNm(it.by))}</td><td style="font-size:13.5px">${dealTxt(it.deal)}</td><td class="n">${it.sat}</td><td class="n">${it.on?it.stok:"—"}</td><td class="n">${tl(it.unit)}</td><td class="n">${tl(it.fiyat)}</td><td class="n">${Math.round(it.sht)}</td></tr>`).join("")}</tbody></table></div>
   <div class="lbl" style="margin-top:6px">Parfümatörlere bakışı</div><div class="chips">${PFR.map(p=>{const x=st.view[p[0]]??50;return `<span class="chip${p[0]==="me"?" on":""}">${esc(p[0]==="me"?"sen":p[1])} <b class="${x>=60?"ok":x<40?"bad":""}">${x}</b></span>`}).join("")}</div>
   <div class="mnote">Bakış puanı, o parfümatörden aldığı parfümler beklenenden çok satınca yükselir, az satınca düşer. Ciro ${tlk(st.ciro)}.</div></div>`}
- return `<div class="lcard scard"><div class="cohd">${LOGO(c,C.n,C.ana)}<div style="flex:1"><div class="spread"><b>${esc(C.n)}</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Arkası</button></div></div></div>
+ return `<div class="lcard scard"><div class="cohd">${MASK(c)}<div style="flex:1"><div class="spread"><b>${esc(C.n)}</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Arkası</button></div></div></div>
  <div class="chips"><span class="chip">${FAM_IC[C.ana]||""} ana koku: ${C.ana}</span><span class="chip">${FAM_IC[C.yan]||""} yan koku: ${C.yan}</span></div>
  <div class="mnote">🌍 ${C.ulke.map(u=>`${ulFl(u,ULD(u).n+": "+ulZevk(u))}${u===C.ulke[3]?"🆕":""}`).join(" ")}</div>${C.ulke.length<4&&UL4[C.id]?`<div class="mnote">📈 ${ulFl(UL4[C.id])} mağazası için: parfümatör parfümlerinden <b>${(EV().cos[C.id].satP||0).toLocaleString("tr-TR")} / ${UL4_SAT.toLocaleString("tr-TR")}</b> şişe satmalı</div>`:""}
  <div class="mnote">👥 ${C.mt.map(m=>`${MTD(m).ic} ${MTD(m).n}`).join(" · ")}</div><div class="mnote">🌱 müşterilerinin %${Math.round((ORG_PAY[C.id]||0)*100)}'i organik arar</div>
