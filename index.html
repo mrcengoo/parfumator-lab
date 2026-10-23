@@ -280,6 +280,7 @@ h1,h2,h3,.brand{color:#000;font-weight:700}
 .kfoot{border-top:1px dashed var(--rule);padding-top:6px}
 input[type=search]{background:#fff!important;color:#000!important;border:1.5px solid #000;border-radius:8px;padding:6px 10px;font:inherit;color-scheme:light}
 input[type=search]::placeholder{color:#444;opacity:1}
+.pfhd{display:flex;gap:10px;align-items:center;margin-bottom:4px}.pfhd .prt{width:96px;height:104px;flex:none;background:#FBF8F2;border:1px solid #000;border-radius:10px}.pfhd b{font-size:16px}
 table.fin{width:100%;border-collapse:collapse;font-size:14px}table.fin th{text-align:left;font:700 12px var(--fu);letter-spacing:.08em;padding:8px 0 2px;border-bottom:2px solid var(--p5b)}table.fin td{padding:3px 0;border-bottom:1px dotted #ddd}table.fin td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:8px}
 
 /* 📰 Gazete: örnek görseldeki eski gazete kolajı; renkler görselden ölçüldü (kâğıt #d2bd9a/#cbb18b, açık kutu #f1deb7/#e1cdac, koyu kutu #b69a74, leke #95683f, mürekkep #2b1f12) */
@@ -458,9 +459,101 @@ function pfFin(id){const E=EV(),its=SIR.flatMap(r=>E.cos[r[0]].items.concat(E.co
  if(id==="me"){const K=kKayit(E),by=t=>K.filter(k=>k.t===t).reduce((a,k)=>a+(k.pay||0),0),sp=MAG.spend||{};g={ozel:by("ozel"),patent:by("patent"),ilk:by("telif"),telif:E.telif||0};gid={kira:sp.kira||0,maas:sp.maas||0,numune:sp.arastirma||0}}
  else{const P=E.pf[id];g=Object.assign({ozel:0,patent:0,ilk:0,telif:0},P.g||{});if(!P.g)g.eski=P.gelir||0;gid={kira:MAG.day*400,maas:MAG.day*450,numune:(P.n||0)*9000}}
  const gt=Object.values(g).reduce((a,x)=>a+x,0),xt=Object.values(gid).reduce((a,x)=>a+x,0);return{g,gid,gt,xt,net:gt-xt,cash:id==="me"?MAG.cash:START_CASH+gt-xt,onShelf,sat,v,deals:its.length}}
+// parfümatör karikatür portreleri (elle çizilmiş SVG, kalem efekti)
+const PRT=(()=>{const K="#3a2e2a",SK="#F6CFB4",SH="#E9AE90",
+ mir=s=>`<g transform="translate(120 0) scale(-1 1)">${s}</g>`,both=s=>s+mir(s),
+ eye=(x,y,r,ir,col,dx=1.5,lid)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#fff" stroke="${K}" stroke-width="1.3"/><circle cx="${x+dx}" cy="${y+1}" r="${ir}" fill="${col}" stroke="${K}" stroke-width=".8"/><circle cx="${x+dx}" cy="${y+1}" r="${ir*.5}" fill="#111"/><circle cx="${x+dx-ir*.35}" cy="${y-ir*.3}" r="${ir*.28}" fill="#fff"/>${lid?`<path d="M${x-r} ${y} A${r} ${r} 0 0 1 ${x+r} ${y}Z" fill="${SK}" stroke="${K}" stroke-width="1.3"/>`:""}`,
+ hatch=(id,c)=>`<pattern id="h${id}" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(40)"><line x1="0" y1="0" x2="0" y2="4" stroke="${c}" stroke-width="1"/></pattern>`,
+ strands=(pts,c,w=.8)=>pts.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`).join(""),
+ wrap=(id,defs,body)=>`<svg class="prt" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg"><defs><filter id="pk${id}" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="${id.length*7}"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter><radialGradient id="bl${id}"><stop offset="0" stop-color="#F08C8C" stop-opacity=".55"/><stop offset="1" stop-color="#F08C8C" stop-opacity="0"/></radialGradient>${defs}</defs><g filter="url(#pk${id})" stroke-linejoin="round" stroke-linecap="round">${body}</g></svg>`,
+ blush=(id,y=80,dx=26)=>`<circle cx="${60-dx}" cy="${y}" r="9" fill="url(#bl${id})"/><circle cx="${60+dx}" cy="${y}" r="9" fill="url(#bl${id})"/>`;
+ const P={};
+ // 🧪 oyuncu: çılgın profesör (beyaz dalgalı saç, kıvrık bıyık, turuncu yuvarlak gözlük, papyon)
+ P.me=()=>wrap("me",hatch("me","#7a5a22"),`
+ <path d="M14 130 Q18 106 44 101 L76 101 Q102 106 106 130Z" fill="#C9973F" stroke="${K}" stroke-width="1.5"/><path d="M14 130 Q18 106 44 101 L76 101 Q102 106 106 130Z" fill="url(#hme)" opacity=".35"/>
+ <path d="M46 101 L60 124 L74 101Z" fill="#A9CC8E" stroke="${K}" stroke-width="1.3"/><path d="M44 101 L52 118 L60 124 M76 101 L68 118 L60 124" fill="none" stroke="${K}" stroke-width="1.3"/><circle cx="60" cy="127" r="1.6" fill="#8a5a2a"/>
+ <path d="M52 92 L52 104 L68 104 L68 92Z" fill="${SH}" stroke="${K}" stroke-width="1.2"/>
+ <path d="M60 107 L47 101 L46 113Z M60 107 L73 101 L74 113Z" fill="#F0A33A" stroke="${K}" stroke-width="1.2"/><path d="M49 103 L49 111 M52 104 L52 110 M71 103 L71 111 M68 104 L68 110" stroke="#7a3a10" stroke-width="1"/><circle cx="60" cy="107" r="3" fill="#E8862A" stroke="${K}" stroke-width="1.1"/>
+ ${both(`<ellipse cx="25" cy="64" rx="7" ry="11" fill="${SK}" stroke="${K}" stroke-width="1.4"/><path d="M27 58 Q22 64 27 71" fill="none" stroke="${SH}" stroke-width="1.5"/>`)}
+ <path d="M60 16 C90 16 96 40 95 62 C94 84 82 99 60 99 C38 99 26 84 25 62 C24 40 30 16 60 16Z" fill="${SK}" stroke="${K}" stroke-width="1.6"/>
+ <path d="M42 32 Q60 27 78 32 M45 38 Q60 34 75 38 M48 43 Q60 40 72 43" fill="none" stroke="${SH}" stroke-width="1.3"/>
+ ${blush("me",78,24)}
+ ${both(`<path d="M27 56 C12 50 10 30 24 24 C18 36 26 40 30 34 C26 44 32 50 27 56Z" fill="#D4D4D4" stroke="#6d6d6d" stroke-width="1.2"/>${strands(["M26 50 C18 44 17 34 23 28","M28 45 C22 40 22 34 26 31","M14 40 C8 34 12 26 18 28 C14 30 14 34 17 34"],"#777")}`)}
+ <path d="M28 38 C24 18 42 4 62 4 C80 2 98 12 96 30 C92 22 84 18 78 22 C86 26 86 34 82 36 C80 28 72 24 64 26 C58 22 50 22 44 26 C38 28 32 32 28 38Z" fill="#D9D9D9" stroke="#6d6d6d" stroke-width="1.2"/>
+ ${strands(["M36 26 C44 14 58 10 70 12","M42 20 C50 12 62 10 74 14","M60 18 C70 12 82 16 88 26","M80 6 C88 -2 102 2 100 12 C98 18 90 16 92 11","M48 14 C46 6 52 2 58 4"],"#6d6d6d",1)}
+ ${both(`<path d="M33 48 C38 41 47 40 54 44 C47 43 40 45 35 50Z" fill="#9a9a9a" stroke="#555" stroke-width="1"/>`)}
+ ${eye(45,62,11,5,"#3E7DD6",2.5)}${eye(75,62,11,5,"#3E7DD6",-1.5)}
+ <circle cx="45" cy="62" r="15" fill="#fff" fill-opacity=".12" stroke="#E39B2B" stroke-width="3.4"/><circle cx="75" cy="62" r="15" fill="#fff" fill-opacity=".12" stroke="#E39B2B" stroke-width="3.4"/><path d="M57 58 Q60 55 63 58" fill="none" stroke="#E39B2B" stroke-width="3"/><path d="M30 60 L26 58 M90 60 L94 58" stroke="#E39B2B" stroke-width="3"/>
+ <path d="M60 64 C52 66 50 76 53 80 C55 84 65 84 67 80 C70 76 68 66 60 64Z" fill="#F3B39C" stroke="${K}" stroke-width="1.4"/><circle cx="57" cy="74" r="1.5" fill="#fff" opacity=".7"/>
+ ${both(`<path d="M60 84 C52 82 38 84 28 90 C20 94 12 90 12 83 C12 77 18 76 20 80 C19 84 23 85 26 82 C34 74 50 74 60 79Z" fill="#CFCFCF" stroke="#5f5f5f" stroke-width="1.2"/>${strands(["M56 82 C48 80 40 81 33 85","M54 84 C46 83 40 84 34 87"],"#7a7a7a",.9)}`)}
+ <path d="M52 90 Q60 94 68 90" fill="none" stroke="${K}" stroke-width="1.3"/>`);
+ // 👤 Mira Kaya: çiçeksi; kızıl dalgalı saç, saçında çiçek, halka küpe, mor bluz
+ P.mira=()=>wrap("mira","",`
+ <path d="M60 12 C26 12 14 40 18 70 C20 92 12 108 22 120 C32 122 40 114 40 108 L80 108 C80 114 88 122 98 120 C108 108 100 92 102 70 C106 40 94 12 60 12Z" fill="#A9472F" stroke="${K}" stroke-width="1.4"/>
+ <path d="M16 130 Q20 108 46 104 L74 104 Q100 108 104 130Z" fill="#9B7BC7" stroke="${K}" stroke-width="1.5"/><path d="M48 104 L60 120 L72 104" fill="${SK}" stroke="${K}" stroke-width="1.3"/>
+ <path d="M53 94 L53 106 L67 106 L67 94Z" fill="${SH}" stroke="${K}" stroke-width="1.2"/>
+ ${both(`<ellipse cx="29" cy="68" rx="5" ry="8" fill="${SK}" stroke="${K}" stroke-width="1.3"/><circle cx="28" cy="82" r="5.5" fill="none" stroke="#E2B13C" stroke-width="2"/>`)}
+ <path d="M60 22 C86 22 92 44 91 64 C90 86 76 100 60 100 C44 100 30 86 29 64 C28 44 34 22 60 22Z" fill="${SK}" stroke="${K}" stroke-width="1.6"/>
+ ${blush("mira",80,22)}
+ <path d="M28 66 C18 50 22 24 42 16 C56 8 76 10 88 20 C100 30 98 52 92 66 C90 50 84 38 76 34 C68 42 52 44 40 38 C34 44 30 54 28 66Z" fill="#B5523B" stroke="${K}" stroke-width="1.4"/>
+ ${strands(["M36 30 C44 22 58 20 70 24","M30 44 C30 34 36 26 44 22","M80 26 C88 32 92 42 92 54","M56 16 C66 14 78 18 84 24"],"#7e3424",1)}
+ <circle cx="86" cy="30" r="6" fill="#F5BFD2" stroke="${K}" stroke-width="1.1"/>${[0,72,144,216,288].map(a=>`<ellipse cx="86" cy="25" rx="3" ry="4.5" transform="rotate(${a} 86 30)" fill="#F7A8C4" stroke="${K}" stroke-width=".9"/>`).join("")}<circle cx="86" cy="30" r="2.2" fill="#FACF71" stroke="${K}" stroke-width=".8"/>
+ ${both(`<path d="M36 50 Q44 45 52 49" fill="none" stroke="#6b2a1e" stroke-width="2.4"/>`)}
+ ${eye(45,62,10,5.5,"#7A4A2A",1.5)}${eye(75,62,10,5.5,"#7A4A2A",-1)}
+ ${both(`<path d="M35 58 L32 55 M37 55 L35 51 M41 53 L40 49" stroke="${K}" stroke-width="1.3"/>`)}
+ <path d="M59 66 C56 74 54 78 58 80 C60 81 63 80 64 79" fill="none" stroke="${K}" stroke-width="1.4"/>
+ <path d="M46 86 Q60 100 74 86 Q60 92 46 86Z" fill="#fff" stroke="${K}" stroke-width="1.3"/><path d="M45 85 Q60 82 75 85 M46 86 Q60 101 74 86" fill="none" stroke="#D9577A" stroke-width="2.4"/>`);
+ // 👤 Jean Morel: odunsu; bere, kır şakaklar, sivri sakal, kalkık kaş, lacivert ceket ve bordo atkı
+ P.jean=()=>wrap("jean","",`
+ <path d="M16 130 Q20 108 46 104 L74 104 Q100 108 104 130Z" fill="#2F3E66" stroke="${K}" stroke-width="1.5"/>
+ <path d="M54 96 L54 106 L66 106 L66 96Z" fill="${SH}" stroke="${K}" stroke-width="1.2"/>
+ <path d="M40 104 Q60 114 80 104 L82 110 Q60 122 38 110Z" fill="#8E2F3C" stroke="${K}" stroke-width="1.3"/><path d="M66 112 L70 130 L60 130 L60 114Z" fill="#8E2F3C" stroke="${K}" stroke-width="1.3"/>
+ ${both(`<ellipse cx="31" cy="64" rx="6" ry="10" fill="${SK}" stroke="${K}" stroke-width="1.4"/>`)}
+ <path d="M60 24 C82 24 89 44 88 62 C87 84 76 104 60 104 C44 104 33 84 32 62 C31 44 38 24 60 24Z" fill="${SK}" stroke="${K}" stroke-width="1.6"/>
+ ${blush("jean",78,20)}
+ <path d="M33 58 C30 42 36 30 46 26 L74 26 C84 30 90 42 87 58 C84 46 80 40 74 38 C64 42 50 42 42 38 C38 42 35 48 33 58Z" fill="#4A3426" stroke="${K}" stroke-width="1.3"/>
+ <path d="M33 58 C32 50 34 44 38 40 M87 58 C88 50 86 44 82 40" stroke="#bdbdbd" stroke-width="3"/>
+ <path d="M26 30 C26 16 48 8 66 10 C86 12 96 22 92 32 C80 36 40 36 26 30Z" fill="#7A1F2E" stroke="${K}" stroke-width="1.4"/><path d="M62 10 L64 4" stroke="${K}" stroke-width="2.2"/>
+ <path d="M36 50 Q44 46 52 50" fill="none" stroke="#3a2618" stroke-width="2.6"/><path d="M68 47 Q76 40 84 46" fill="none" stroke="#3a2618" stroke-width="2.6"/>
+ ${eye(45,61,8,4.5,"#6B4A2E",1.5,1)}${eye(75,60,9,4.5,"#6B4A2E",-1)}
+ <path d="M60 58 C58 70 52 80 54 84 C56 88 64 88 66 85" fill="#F3BFA4" stroke="${K}" stroke-width="1.4"/>
+ <path d="M46 90 C52 87 58 88 60 90 C62 88 68 87 74 90" fill="none" stroke="#3a2618" stroke-width="2.4"/>
+ <path d="M50 95 Q60 99 72 92" fill="none" stroke="${K}" stroke-width="1.4"/>
+ <path d="M54 100 Q60 116 66 100 Q60 103 54 100Z" fill="#4A3426" stroke="${K}" stroke-width="1.1"/>`);
+ // 👤 Lucia Bianchi: narenciye; sarı topuz, kocaman siyah gözlük, limon küpe, kırmızı ruj
+ P.lucia=()=>wrap("lucia","",`
+ <path d="M16 130 Q20 108 46 104 L74 104 Q100 108 104 130Z" fill="#F7B54A" stroke="${K}" stroke-width="1.5"/><path d="M46 104 Q60 116 74 104" fill="${SK}" stroke="${K}" stroke-width="1.3"/>${[30,44,76,90].map(x=>`<circle cx="${x}" cy="${x<60?122:122}" r="3" fill="#fff" opacity=".7"/>`).join("")}
+ <path d="M54 94 L54 106 L66 106 L66 94Z" fill="${SH}" stroke="${K}" stroke-width="1.2"/>
+ <ellipse cx="60" cy="12" rx="16" ry="11" fill="#F2D27A" stroke="${K}" stroke-width="1.4"/>${strands(["M48 10 C54 4 66 4 72 10","M50 15 C56 10 66 10 70 16"],"#B8913A",1)}
+ ${both(`<ellipse cx="30" cy="66" rx="5" ry="8" fill="${SK}" stroke="${K}" stroke-width="1.3"/><path d="M30 74 L30 78" stroke="${K}" stroke-width="1"/><ellipse cx="30" cy="83" rx="4" ry="5.5" fill="#F4E04D" stroke="${K}" stroke-width="1.1"/><path d="M30 77 L32 75" stroke="#5F8A3A" stroke-width="1.6"/>`)}
+ <path d="M60 22 C84 22 91 44 90 64 C89 86 76 100 60 100 C44 100 31 86 30 64 C29 44 36 22 60 22Z" fill="${SK}" stroke="${K}" stroke-width="1.6"/>
+ ${blush("lucia",80,22)}
+ <path d="M30 64 C26 40 38 22 60 20 C82 22 94 40 90 64 C88 48 82 40 74 36 C70 44 58 46 44 40 C38 46 33 54 30 64Z" fill="#F2D27A" stroke="${K}" stroke-width="1.4"/>
+ ${strands(["M40 30 C48 24 60 22 72 26","M34 46 C36 36 42 30 50 26","M78 30 C86 36 90 46 90 56"],"#B8913A",1)}
+ ${both(`<path d="M37 47 Q45 43 53 47" fill="none" stroke="#9c7a35" stroke-width="2"/>`)}
+ ${eye(45,62,9,5,"#3F8F5A",1.5)}${eye(75,62,9,5,"#3F8F5A",-1)}
+ <circle cx="44" cy="62" r="14" fill="#fff" fill-opacity=".1" stroke="#151515" stroke-width="4"/><circle cx="76" cy="62" r="14" fill="#fff" fill-opacity=".1" stroke="#151515" stroke-width="4"/><path d="M58 60 Q60 57 62 60" fill="none" stroke="#151515" stroke-width="3.4"/><path d="M53 52 L56 50 M84 52 L87 50" stroke="#fff" stroke-width="1.6"/>
+ <path d="M60 68 C58 74 56 78 59 80 C61 81 63 80 64 79" fill="none" stroke="${K}" stroke-width="1.4"/>
+ <path d="M48 87 Q54 84 60 86 Q66 84 72 87 Q60 97 48 87Z" fill="#D8343F" stroke="${K}" stroke-width="1.2"/><path d="M48 87 Q60 90 72 87" fill="none" stroke="#8a1a22" stroke-width="1"/>`);
+ // 👤 Kenji Sato: akuatik; dik siyah saç, ince dikdörtgen gözlük, kocaman gülüş, turkuaz balıkçı yaka, dalga rozeti
+ P.kenji=()=>wrap("kenji","",`
+ <path d="M16 130 Q20 108 46 104 L74 104 Q100 108 104 130Z" fill="#37898C" stroke="${K}" stroke-width="1.5"/><path d="M48 98 L48 110 Q60 114 72 110 L72 98Z" fill="#9DD8D4" stroke="${K}" stroke-width="1.3"/><path d="M50 104 Q60 107 70 104" fill="none" stroke="${K}" stroke-width=".9"/>
+ <circle cx="84" cy="118" r="5.5" fill="#fff" stroke="${K}" stroke-width="1.1"/><path d="M80 119 Q82 115 84 119 Q86 115 88 119" fill="none" stroke="#37898C" stroke-width="1.4"/>
+ ${both(`<ellipse cx="27" cy="62" rx="6" ry="10" fill="${SK}" stroke="${K}" stroke-width="1.4"/>`)}
+ <path d="M60 22 C88 22 94 42 93 60 C92 82 80 98 60 98 C40 98 28 82 27 60 C26 42 32 22 60 22Z" fill="${SK}" stroke="${K}" stroke-width="1.6"/>
+ ${blush("kenji",76,26)}
+ <path d="M28 52 C24 36 30 24 38 20 L32 10 L44 16 L46 4 L54 14 L60 0 L66 13 L76 4 L77 16 L90 10 L84 22 C92 30 94 40 92 52 C88 40 82 34 74 32 C64 38 50 38 40 32 C34 38 30 44 28 52Z" fill="#1E1E24" stroke="${K}" stroke-width="1.3"/>
+ ${strands(["M44 22 L50 30","M58 18 L60 30","M72 20 L68 30"],"#55555f",1.2)}
+ ${both(`<path d="M34 46 L52 44" fill="none" stroke="#1E1E24" stroke-width="3.2"/>`)}
+ ${eye(44,58,8,4.5,"#3a2a20",1.5)}${eye(76,58,8,4.5,"#3a2a20",-1)}
+ <rect x="32" y="50" width="25" height="17" rx="3" fill="#fff" fill-opacity=".1" stroke="#333" stroke-width="1.8"/><rect x="63" y="50" width="25" height="17" rx="3" fill="#fff" fill-opacity=".1" stroke="#333" stroke-width="1.8"/><path d="M57 56 L63 56" stroke="#333" stroke-width="1.8"/>
+ <path d="M60 64 C56 70 55 74 58 76 C60 77 63 76 64 75" fill="none" stroke="${K}" stroke-width="1.4"/>
+ <path d="M38 80 Q60 104 82 80 Q60 86 38 80Z" fill="#fff" stroke="${K}" stroke-width="1.4"/><path d="M42 84 Q60 98 78 84" fill="#C9475A" stroke="${K}" stroke-width="1"/><path d="M40 81 Q60 87 80 81 L79 85 Q60 90 41 85Z" fill="#fff" stroke="${K}" stroke-width=".9"/>${[48,54,60,66,72].map(x=>`<path d="M${x} 83 L${x} 88" stroke="#bbb" stroke-width=".7"/>`).join("")}
+ ${both(`<path d="M36 82 Q34 78 37 76" fill="none" stroke="${K}" stroke-width="1.2"/>`)}`);
+ return id=>(P[id]||P.me)()})();
 function finansHtml(){const rows=PFR.map(p=>[p[0],pfFin(p[0])]),tr=(n,v,c)=>`<tr><td>${n}</td><td class="n${c?" "+c:""}">${tl(v)}</td></tr>`;
  return `<div class="sheet"><div class="spread"><h2>💰 Parfümatörlerin Finansı</h2><span class="lbl">gün ${MAG.day}</span></div><div class="muted">Senin ve rakip parfümatörlerin gelirleri, giderleri ve durumu. Rakiplerin giderleri tahminidir: atölye kirası, maaşlar ve numune masrafı.</div>
- <div class="hgrid">${rows.map(([id,F])=>`<div class="card"><div class="spread"><b>${id==="me"?"🧪":"👤"} ${esc(pfNm(id))}</b><span class="lbl">bakış ${F.v}/100</span></div><div class="mnote">🌍 Dünya şöhreti: <b>${worldOf(id).length} ülke</b></div><table class="fin"><tbody>
+ <div class="hgrid">${rows.map(([id,F])=>`<div class="card"><div class="pfhd">${PRT(id)}<div><b>${esc(pfNm(id))}</b><div class="lbl">bakış ${F.v}/100</div><div class="mnote">🌍 Dünya şöhreti: <b>${worldOf(id).length} ülke</b></div></div></div><table class="fin"><tbody>
  <tr><th colspan="2">GELİRLER</th></tr>${tr("🎨 Özel tasarım ücretleri",F.g.ozel)}${tr("🔒 Patent ücretleri",F.g.patent)}${tr("📜 Telif ilk ödemeleri",F.g.ilk)}${tr("📜 Alınan telif payları",F.g.telif)}${F.g.eski?tr("Önceki kayıtlar",F.g.eski):""}
  <tr><th colspan="2">GİDERLER</th></tr>${tr("🏠 Atölye kirası",F.gid.kira)}${tr("👥 Maaşlar",F.gid.maas)}${tr("🧪 Numune ve araştırma",F.gid.numune)}
  <tr><th colspan="2">SONUÇ</th></tr>${tr("Toplam gelir",F.gt)}${tr("Toplam gider",F.xt)}<tr><td><b>Net kâr</b></td><td class="n ${F.net<0?"bad":"ok"}"><b>${tl(F.net)}</b></td></tr><tr><td>Kâr marjı</td><td class="n">${F.gt?Math.round(F.net/F.gt*100)+"%":"—"}</td></tr>
