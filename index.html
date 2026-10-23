@@ -341,9 +341,9 @@ table.fin{width:100%;border-collapse:collapse;font-size:14px}table.fin th{text-a
 .gz .x,.gz .x p,.gz .p>p{font:500 15.5px/1.6 Georgia,"Times New Roman",serif;letter-spacing:.1px;text-align:left;hyphens:none}
 .gz .x b{font-weight:800}
 .gz table{font:500 14px/1.45 Georgia,serif}
-.gz .img{aspect-ratio:1/1;width:100%;height:auto;max-width:200px;box-sizing:border-box;background:#fff;border:1.5px solid #222;border-radius:4px;padding:8px;filter:grayscale(1) contrast(1.25) brightness(1.03)}
+.gz .img{aspect-ratio:1/1;width:100%;height:auto;max-width:200px;box-sizing:border-box;background:#FBF8F2;border:1px solid #000;border-radius:10px;padding:8px}
 .gz .gfr,.gz .gfl{width:min(40%,200px)!important}
-@media (max-width:760px){.gz .x,.gz .x p,.gz .p>p{font-size:16px;line-height:1.6}.gz .img{max-width:150px}.gz .gfr,.gz .gfl{width:42%!important}.gz .p.m1 .gfr,.gz .p.m1 .gfl{width:60%!important}}
+@media (max-width:760px){.gz .x,.gz .x p,.gz .p>p{font-size:16px;line-height:1.6}.gz .img{max-width:150px}.gz .img.mask,.gz .img.prt{padding:3px}.gz .gfr,.gz .gfl{width:42%!important}.gz .p.m1 .gfr,.gz .p.m1 .gfl{width:60%!important}}
 </style>
 </head>
 <body>
@@ -914,11 +914,11 @@ const LOGO=(()=>{const K="#2b2420",PA="#F7EFDD",
   return `<svg class="logo" viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg"><path d="${fr(t,2)}" fill="${PA}" stroke="${K}" stroke-width="2.2"/><path d="${fr(t,6)}" fill="none" stroke="${K}" stroke-width=".8"/>${txt}<g transform="translate(${(50-30*sc).toFixed(1)} ${iy+2}) scale(${sc.toFixed(3)})">${I[ic]}</g>
   <path d="M30 ${118-5}H70" stroke="${K}" stroke-width=".6"/><text x="50" y="122" text-anchor="middle" font-family="Georgia,serif" font-size="6.2" letter-spacing=".6" fill="${K}">${alt?up(alt)+" · ":""}${yr}</text></svg>`}})();
 // şirket maskotları: renkli çizgi film hayvanlar (kalın siyah çizgi, düz renk, kocaman gözler)
-const MASK=(()=>{const K="#1d1a1a",W="#fff",
- P=(d,f,w=2.2)=>`<path d="${d}" fill="${f}" stroke="${K}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`,
- C=(x,y,r,f,w=2.2)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${K}" stroke-width="${w}"/>`,
- E=(x,y,rx,ry,f,w=2.2,t="")=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${f}" stroke="${K}" stroke-width="${w}"${t}/>`,
- eye=(x,y,s=1,dx=1)=>E(x,y,5.5*s,7.5*s,W,2)+`<ellipse cx="${x+dx*s}" cy="${y+1.5*s}" rx="${3*s}" ry="${4.6*s}" fill="${K}"/><path d="M${x+dx*s} ${y+1.5*s}L${x+dx*s+2.6*s} ${y-1.8*s}L${x+dx*s+.4*s} ${y-3.2*s}Z" fill="${W}"/>`,
+const MASK=(()=>{const K="#3a2e2a",W="#fff",
+ P=(d,f,w=1.5)=>`<path d="${d}" fill="${f}" stroke="${K}" stroke-width="${w}" stroke-linejoin="round" stroke-linecap="round"/>`,
+ C=(x,y,r,f,w=1.5)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="${f}" stroke="${K}" stroke-width="${w}"/>`,
+ E=(x,y,rx,ry,f,w=1.5,t="")=>`<ellipse cx="${x}" cy="${y}" rx="${rx}" ry="${ry}" fill="${f}" stroke="${K}" stroke-width="${w}"${t}/>`,
+ eye=(x,y,s=1,dx=1)=>E(x,y,5.5*s,7.5*s,W,1.3)+`<ellipse cx="${x+dx*s}" cy="${y+1.5*s}" rx="${3*s}" ry="${4.6*s}" fill="${K}"/><path d="M${x+dx*s} ${y+1.5*s}L${x+dx*s+2.6*s} ${y-1.8*s}L${x+dx*s+.4*s} ${y-3.2*s}Z" fill="${W}"/>`,
  eyes=(y,g=9,s=1)=>eye(50-g,y,s,1)+eye(50+g,y,s,1),
  smile=(y,w=10,f="#E85A6B")=>P(`M${50-w} ${y}Q50 ${y+w*1.3} ${50+w} ${y}Q50 ${y+w*.35} ${50-w} ${y}Z`,K,1.8)+`<path d="M${50-w*.45} ${y+w*.75}Q50 ${y+w*.5} ${50+w*.45} ${y+w*.75}Q50 ${y+w*1.05} ${50-w*.45} ${y+w*.75}Z" fill="${f}"/>`,
  body=(f,extra="")=>P("M16 101C18 82 32 74 50 74C68 74 82 82 84 101Z",f)+extra,
@@ -926,7 +926,7 @@ const MASK=(()=>{const K="#1d1a1a",W="#fff",
  M={
  aroma:["#FCEEBE",()=>`${E(28,58,13,9,"#D9F1F8",1.8,' transform="rotate(-30 28 58)"')}${E(72,58,13,9,"#D9F1F8",1.8,' transform="rotate(30 72 58)"')}
  ${body("#FFC93C",P("M22 88H78","none",0)+`<path d="M24 86Q50 80 76 86L80 94Q50 88 20 94Z" fill="${K}"/>`)}
- <path d="M42 22Q36 10 30 8M58 22Q64 10 70 8" fill="none" stroke="${K}" stroke-width="2.2"/>${C(30,8,3.5,K,1)}${C(70,8,3.5,K,1)}
+ <path d="M42 22Q36 10 30 8M58 22Q64 10 70 8" fill="none" stroke="${K}" stroke-width="1.5"/>${C(30,8,3.5,K,1)}${C(70,8,3.5,K,1)}
  ${C(50,44,24,"#FFC93C")}${eyes(40)}${smile(52,9)}${C(34,52,3.5,"#F7A0A8",0)}${C(66,52,3.5,"#F7A0A8",0)}
  ${glove(84,72,15)}${[0,72,144,216,288].map(a=>E(88,52,3,5,"#F58BB0",1.4,` transform="rotate(${a} 88 57)"`)).join("")}${C(88,57,2.5,"#FFC93C",1.2)}`],
  scent:["#D9F1F8",()=>`${body("#FFF6E4",P("M40 78Q50 86 60 78","none",2))}
@@ -964,14 +964,14 @@ const MASK=(()=>{const K="#1d1a1a",W="#fff",
  ${P("M30 28C30 18 70 18 70 28Z","#fff",2)}${P("M28 28H72V32H28Z","#2E7DD1",1.8)}${C(50,20,3,"#E8434F",1.2)}
  ${glove(84,72,15)}`],
  gul:["#F9D2D6",()=>`${body("#E8343F",[30,44,58,70,38,62].map((x,i)=>C(x,i<4?88:96,3.5,K,0)).join("")+P("M50 74V101","none",2))}
- <path d="M42 24Q36 12 30 10M58 24Q64 12 70 10" fill="none" stroke="${K}" stroke-width="2.2"/>${C(30,10,3,K,1)}${C(70,10,3,K,1)}
+ <path d="M42 24Q36 12 30 10M58 24Q64 12 70 10" fill="none" stroke="${K}" stroke-width="1.5"/>${C(30,10,3,K,1)}${C(70,10,3,K,1)}
  ${C(50,46,22,"#2A2A2A")}${eyes(43)}${smile(53,8,"#E85A6B").replace(`fill="${K}"`,`fill="#fff" stroke-opacity=".9"`)}${C(35,54,3.5,"#E8343F",0)}${C(65,54,3.5,"#E8343F",0)}
  ${glove(16,74,-15)}${P("M14 58L10 44","none",2)}${C(9,42,7,"#E8343F",1.8)}${P("M6 41Q9 37 12 41Q9 45 6 41","none",1.2)}${P("M12 52Q18 48 20 52Q16 55 12 52Z","#5FA84A",1.2)}`],
  kaya:["#E8D6C4",()=>`${body("#C8333A",`<path d="M30 76V101M40 75V101M60 75V101M70 76V101M18 88H82M18 96H82" stroke="${K}" stroke-width="1.4" opacity=".55"/>`+P("M42 75L50 84L58 75","#F2E3CC",1.8))}
  ${C(30,26,8,"#9B6438")}${C(70,26,8,"#9B6438")}${C(30,26,4,"#D9A57A",0)}${C(70,26,4,"#D9A57A",0)}
  ${C(50,46,23,"#9B6438")}${E(50,57,12,9,"#D9A57A",2)}${eyes(41)}${E(50,52,4,3,K,1)}${P("M43 60Q50 66 57 60","none",1.8)}
  ${glove(84,72,15)}`]};
- return c=>{const m=M[c]||M.aroma;return `<svg class="mask" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><rect x="1" y="1" width="98" height="98" rx="14" fill="${m[0]}" stroke="${K}" stroke-width="1.5"/><g>${m[1]()}</g></svg>`}})();
+ return c=>{const m=M[c]||M.aroma;return `<svg class="mask" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="mk${c}" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".05" numOctaves="2" seed="${c.length*5}"/><feDisplacementMap in="SourceGraphic" scale="1.8" result="d"/><feColorMatrix in="d" type="saturate" values=".78"/></filter></defs><rect x="1" y="1" width="98" height="98" rx="10" fill="#FBF8F2" stroke="#000" stroke-width="1"/><circle cx="50" cy="52" r="40" fill="${m[0]}" opacity=".7"/><g filter="url(#mk${c})" stroke-linejoin="round" stroke-linecap="round">${m[1]()}</g></svg>`}})();
 function sirCard(c){const C=SIRD(c),st=EV().cos[c],v=st.view.me??50,back=(UI.coBack||{})[c];
  if(back){const its=st.items.map(it=>({...it,on:1})).concat(st.past);return `<div class="lcard scard" style="border-top:4px solid var(--accent)"><div class="spread"><b>${esc(C.n)} · arka yüz</b><button class="btn ghost" style="padding:2px 8px;font-size:12.5px" data-act="cflip" data-co="${c}">Önü</button></div>
   <div class="lbl">Aldığı parfümler</div><div class="scroll"><table><thead><tr><th>Parfüm</th><th>Parfümatör</th><th>Anlaşma</th><th class="n">Satılan</th><th class="n">Stok</th><th class="n">Maliyet</th><th class="n">Fiyat</th><th class="n">Şöhret</th></tr></thead><tbody>${its.map(it=>`<tr${it.by==="me"?' style="font-weight:700"':""}><td>${esc(it.name)}${orgIt(it)>=ORG_MIN?" 🌱":""}${it.on?"":` <span class="mnote">raftan kalktı</span>`}</td><td style="font-size:13.5px">${esc(pfNm(it.by))}</td><td style="font-size:13.5px">${dealTxt(it.deal)}</td><td class="n">${it.sat}</td><td class="n">${it.on?it.stok:"—"}</td><td class="n">${tl(it.unit)}</td><td class="n">${tl(it.fiyat)}</td><td class="n">${Math.round(it.sht)}</td></tr>`).join("")}</tbody></table></div>
@@ -1147,12 +1147,17 @@ const GZI=(()=>{const st='fill="none" stroke="#2b1f12" stroke-linecap="round" st
  mektup:`<svg viewBox="0 0 200 140" role="img" aria-label="Gravür: mühürlü mektup"><defs>${wc("w8","#8a6a3a")}${wc("w8b","#9a3a2a")}</defs><rect x="20" y="20" width="160" height="100" fill="url(#w8)"/><g ${st} stroke-width="1.5"><path d="M20 24h160v96H20z"/><path d="M20 24l80 56 80-56M20 120l60-44M180 120l-60-44" stroke-width="1"/>${hat(26,90,40,26,6,6)}</g><circle cx="100" cy="80" r="14" fill="url(#w8b)" stroke="#2b1f12" stroke-width="1.2"/><text x="100" y="84" text-anchor="middle" font-family="UnifrakturMaguntia,serif" font-size="12" fill="#2b1f12">S</text></svg>`,
  terazi:`<svg viewBox="0 0 200 160" role="img" aria-label="Gravür: terazi"><defs>${wc("w9","#7d6a3a")}</defs><ellipse cx="100" cy="100" rx="90" ry="50" fill="url(#w9)"/><g ${st} stroke-width="1.5"><path d="M100 20v120M70 140h60M80 150h40"/><path d="M30 40h140"/><circle cx="100" cy="20" r="5"/><path d="M40 40l-18 44M40 40l18 44M160 40l-18 44M160 40l18 44" stroke-width="1"/><path d="M18 84c4 10 40 10 44 0zM138 84c4 10 40 10 44 0z"/><path d="M30 84c2-8 6-12 10-12s8 4 10 12" stroke-width=".9"/><circle cx="160" cy="80" r="5" stroke-width="1"/></g></svg>`}})();
 // resim boyu viewBox oranından: kayan kutuda yüksekliği çökmesin
-const gzImg=v=>{const m=v.match(/viewBox="0 0 (\d+) (\d+)"/);return v.replace("<svg ",`<svg class="img" width="${m[1]}" height="${m[2]}" style="aspect-ratio:${m[1]}/${m[2]}" `)};
+let GZF=0;const gzImg=v=>{const m=v.match(/viewBox="0 0 (\d+) (\d+)"/),id="gzf"+(++GZF),a=v.indexOf(">")+1,b=v.lastIndexOf("</svg>");
+ // parfümatör portreleriyle aynı ton: kalem titremesi, sıcak renkli lekeler
+ v=v.slice(0,a)+`<filter id="${id}" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="2" seed="${GZF%9}"/><feDisplacementMap in="SourceGraphic" scale="2.4"/></filter><g filter="url(#${id})">`+v.slice(a,b).replace(/stop-opacity="\.55"/g,'stop-opacity=".95"').replace(/stroke-width="([\d.]+)"/g,(m,w)=>`stroke-width="${(w*1.7).toFixed(2)}"`).replace(/#2b1f12/g,"#3a2e2a")+"</g>"+v.slice(b);
+ return v.replace("<svg ",`<svg class="img" width="${m[1]}" height="${m[2]}" style="aspect-ratio:${m[1]}/${m[2]}" `)};
 const GZ_ILAN=[["Grasse Cam Atölyesi","El üfleme kristal şişeler, ısmarlama kapaklar.","Her boyda, her renkte"],["Anadolu Gül Yağı","Isparta vadisinden taze damıtma.","Kilosu borsa fiyatına"],["Saf Etanol %96","Kokusuz, gümrüklü, damacana ile.","Kapıya teslim"],["Koklama Kartı Matbaası","Logolu mouillette, bin adedi uygun.","Siparişler bir haftada"],["Kehribar ve Oud Ticarethanesi","Uzak Doğu'dan nadir reçineler.","Numune için mektup yazınız"]];
 const GZ_IC={yz:"madalya",cik:"sise",kad:"portre",rek:"kure",mo:"imbik",hm:"gul",bu:"kure",si:"mektup",rf:"dukkan",mu:"dukkan",tl:"terazi",me:"sise",pf:"portre"};
 const GZ_EK={yz:"Kazanan parfümler bir ay boyunca yüzde 10 daha fazla satacak; madalyalar parfümatörlerin vitrinine kondu.",cik:"Eleştirmenler ilk şişeleri koklamak için sırada.",kad:"Rakip atölyeler bu gelişmeyi yakından izliyor.",rek:"Hissedarlar sonuçtan memnun.",mo:"Laboratuvarlar bu molekülün peşine düştü.",hm:"Borsa çevrelerinde bu hareket dikkatle izleniyor.",bu:"Şirket yöneticileri yeni mağazaların ilk yıl temkinli satacağını söylüyor.",si:"Muhabirimizin öğrendiğine göre şirket numuneleri titizlikle koklayacak.",rf:"Satıcılar rafta yer açıldığını, yeni formüllere kapının aralık olduğunu belirtiyor.",mu:"Piyasada bu gelişmenin parfümatörlerin itibarına yansıyacağı konuşuluyor.",tl:"Telif sözleşmesinin bitmesiyle formül yeniden pazara çıktı.",me:"Atölyeden yapılan açıklamada başarının sabırlı çalışmanın ürünü olduğu vurgulandı.",pf:"Rakip atölyeler bu hamleyi yakından takip ediyor."};
-function gzPanel(x,k,sp){const tp=x.tp||gzTip(x.t),[h,b]=x.h?[gzClean(x.h),gzClean(x.b)]:gzSplit(x.t),tone=["a","","k","a","o",""][k%6],big=sp>=3,ic=GZ_IC[tp];
- return `<div class="p ${tone} s${sp} m1"><span class="d">GÜN ${x.d}</span><h4>${esc(h)}</h4><div class="x">${ic?`<div class="${k%2?"gfl":"gfr"}">${gzImg(GZI[ic])}</div>`:""}<p class="${big?"dc":""}">${esc(b?b+(/[.!?)]$/.test(b)?"":"."):"")} ${GZ_EK[tp]}</p></div></div>`}
+const gzPic=v=>v.replace(/<svg class="(prt|mask)"/,'<svg class="img $1"');
+function gzWho(t){t=t||"";const p=PFR.slice(1).find(p=>t.includes(p[1])||t.includes(p[1].split(" ")[0]));if(p)return gzPic(PRT(p[0]));if(/MassaiMara|\(sen\)|anlaştın|tanındın/.test(t)||(MAG.co&&t.includes(MAG.co)))return gzPic(PRT("me"));const r=SIR.find(r=>t.includes(r[1]));return r?gzPic(MASK(r[0])):""}
+function gzPanel(x,k,sp){const tp=x.tp||gzTip(x.t),[h,b]=x.h?[gzClean(x.h),gzClean(x.b)]:gzSplit(x.t),tone=["a","","k","a","o",""][k%6],big=sp>=3,ic=GZ_IC[tp],who=gzWho((x.h||"")+" "+(x.b||"")+" "+(x.t||""));
+ return `<div class="p ${tone} s${sp} m1"><span class="d">GÜN ${x.d}</span><h4>${esc(h)}</h4><div class="x">${who||ic?`<div class="${k%2?"gfl":"gfr"}">${who||gzImg(GZI[ic])}</div>`:""}<p class="${big?"dc":""}">${esc(b?b+(/[.!?)]$/.test(b)?"":"."):"")} ${GZ_EK[tp]}</p></div></div>`}
 // 📰 sabit köşeler: en çok satanlar, analist, müşteri yorumları (oyun verisinden hesaplanır)
 const s30=it=>it.hs.slice(-30).reduce((a,x)=>a+x,0);
 function gzSatis(){const E=EV(),all=[];SIR.forEach(r=>E.cos[r[0]].items.forEach(it=>all.push({it,c:r[0],k:s30(it)})));return all.sort((a,b)=>b.k-a.k)}
@@ -1176,10 +1181,10 @@ function gazeteHtml(){const E=EV(),N=(RK.news||[]),sea=SEAS[Math.floor(MAG.day/3
  const GZ=(E.gz||[]),news=N.filter(x=>x!==imp&&!/depoya geldi/.test(x.t)&&!(/^🧪/.test(x.t)&&GZ.some(g=>g.nm&&x.t.includes(g.nm)))).concat(GZ).sort((a,b)=>b.d-a.d).slice(0,12),A=gzSatis();
  let h=`<div class="gz" lang="tr"><div class="gg">
  <div class="p a s6 mast"><div class="t">Parfümatör Gazetesi</div><div class="u"><span>Sayı ${MAG.day+1}</span><span>Gün ${MAG.day} · ${sea}</span><span>Koku dünyasının en eski haber kaynağı</span><span>Fiyatı 5 kuruş</span></div></div>
- <div class="p k s4"><span class="d">MANŞET${imp?` · GÜN ${imp.d}`:""}</span><h3>${esc(mh)}</h3><div class="x x2"><div class="gfr" style="width:40%">${gzImg(GZI.sise)}</div><p class="dc">${esc(mb?mb+(/[.!?)]$/.test(mb)?"":"."):"")} Koku dünyası bu haberle çalkalanıyor. Piyasada ${SIR.length} şirket ve ${PFR.length} parfümatör yarışırken bu mevsimin gözdesi ${esc(tf)} ailesi oldu. Atölyelerde ışıklar geç saatlere kadar yanıyor; şirketler yeni formül, müşteriler yeni koku bekliyor.</p><p>Gazetemizin muhabirleri borsadan mağazalara kadar her köşeyi dolaştı. Hammadde fiyatlarından şirketlerin büyümesine, rakip atölyelerin hamlelerinden siparişlere kadar günün bütün haberleri bu sayfalarda.</p></div></div>
+ <div class="p k s4"><span class="d">MANŞET${imp?` · GÜN ${imp.d}`:""}</span><h3>${esc(mh)}</h3><div class="x x2"><div class="gfr" style="width:40%">${gzWho(mh+" "+mb)||gzImg(GZI.sise)}</div><p class="dc">${esc(mb?mb+(/[.!?)]$/.test(mb)?"":"."):"")} Koku dünyası bu haberle çalkalanıyor. Piyasada ${SIR.length} şirket ve ${PFR.length} parfümatör yarışırken bu mevsimin gözdesi ${esc(tf)} ailesi oldu. Atölyelerde ışıklar geç saatlere kadar yanıyor; şirketler yeni formül, müşteriler yeni koku bekliyor.</p><p>Gazetemizin muhabirleri borsadan mağazalara kadar her köşeyi dolaştı. Hammadde fiyatlarından şirketlerin büyümesine, rakip atölyelerin hamlelerinden siparişlere kadar günün bütün haberleri bu sayfalarda.</p></div></div>
  <div class="p a s2 r2"><h4>Hammadde Borsası</h4><div class="x">${gzImg(GZI.imbik)}<p><b>Mevsimin gözdesi ${esc(tf)}.</b> Bu aileden notalara talep arttı.</p></div>${mv.length?`<table><thead><tr><th>Pahalı</th><th class="n">10 ml</th><th class="n">fark</th></tr></thead><tbody>${mv.slice(0,4).map(row).join("")}</tbody></table><table><thead><tr><th>Kelepir</th><th class="n">10 ml</th><th class="n">fark</th></tr></thead><tbody>${mv.slice(-4).reverse().map(row).join("")}</tbody></table>`:`<div class="x"><i>Borsa henüz açılmadı.</i></div>`}</div>
- ${top&&top.k?`<div class="p o s2 m1"><h4>Ayın Şirketi</h4><div class="x"><div class="gfr" style="width:46%">${gzImg(GZI.madalya)}</div><p><b>${esc(SIRD(top.c).n)}</b> son 30 günde ${top.k.toLocaleString("tr-TR")} şişe satarak zirveye oturdu. Mağazaları: ${SIRD(top.c).ulke.map(u=>esc(ULD(u).n)).join(", ")}.</p></div></div>`:""}
- <div class="p a s2"><h4>Dünya Şöhreti</h4><div class="x"><div class="gfl" style="width:34%">${gzImg(GZI.portre)}</div></div><table><thead><tr><th>Parfümatör</th><th class="n">ülke</th><th class="n">anlaşma</th></tr></thead><tbody>${pr2.map(x=>`<tr${x.id==="me"?' style="font-weight:700"':""}><td>${esc(x.n)}</td><td class="n">${x.w}</td><td class="n">${x.d}</td></tr>`).join("")}</tbody></table></div>`;
+ ${top&&top.k?`<div class="p o s2 m1"><h4>Ayın Şirketi</h4><div class="x"><div class="gfr" style="width:46%">${gzPic(MASK(top.c))}</div><p><b>${esc(SIRD(top.c).n)}</b> son 30 günde ${top.k.toLocaleString("tr-TR")} şişe satarak zirveye oturdu. Mağazaları: ${SIRD(top.c).ulke.map(u=>esc(ULD(u).n)).join(", ")}.</p></div></div>`:""}
+ <div class="p a s2"><h4>Dünya Şöhreti</h4><div class="x"><div class="gfl" style="width:34%">${gzPic(PRT(pr2[0].id))}</div></div><table><thead><tr><th>Parfümatör</th><th class="n">ülke</th><th class="n">anlaşma</th></tr></thead><tbody>${pr2.map(x=>`<tr${x.id==="me"?' style="font-weight:700"':""}><td>${esc(x.n)}</td><td class="n">${x.w}</td><td class="n">${x.d}</td></tr>`).join("")}</tbody></table></div>`;
  h+=gzEnCok(A)+(gzAnaliz(A)||`<div class="p a s3 m1"><h4>Koku Uzmanları İnceledi</h4><div class="x"><p><i>Rafta incelenecek parfüm yok.</i></p></div></div>`);
  // kutular satırları boşluksuz doldursun: her satır 6 sütun
  const it=[],yz=gzYorum(A);if(yz)it.push(sp=>yz.replace(" s3 "," s"+sp+" "));news.forEach((x,k)=>{it.push(sp=>gzPanel(x,k,sp));if(k===2)it.push(sp=>il(0,sp));if(k===6)it.push(sp=>il(2,sp))});
