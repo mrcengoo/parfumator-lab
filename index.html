@@ -280,7 +280,7 @@ h1,h2,h3,.brand{color:#000;font-weight:700}
 .kfoot{border-top:1px dashed var(--rule);padding-top:6px}
 input[type=search]{background:#fff!important;color:#000!important;border:1.5px solid #000;border-radius:8px;padding:6px 10px;font:inherit;color-scheme:light}
 input[type=search]::placeholder{color:#444;opacity:1}
-.pfhd{display:flex;gap:10px;align-items:center;margin-bottom:4px}.pfhd .prt{width:96px;height:104px;flex:none;background:#FBF8F2;border:1px solid #000;border-radius:10px}.pfhd b{font-size:16px}
+.kpr .prt{width:76px;height:82px;background:#FBF8F2;border:1px solid #000;border-radius:10px}.pfhd{display:flex;gap:10px;align-items:center;margin-bottom:4px}.pfhd .prt{width:96px;height:104px;flex:none;background:#FBF8F2;border:1px solid #000;border-radius:10px}.pfhd b{font-size:16px}
 .cohd{display:flex;gap:10px;align-items:center;margin-bottom:6px}.cohd .mask{width:84px;flex:none;display:block;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.15))}
 table.fin{width:100%;border-collapse:collapse;font-size:14px}table.fin th{text-align:left;font:700 12px var(--fu);letter-spacing:.08em;padding:8px 0 2px;border-bottom:2px solid var(--p5b)}table.fin td{padding:3px 0;border-bottom:1px dotted #ddd}table.fin td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:8px}
 
@@ -468,6 +468,12 @@ const PRT=(()=>{const K="#3a2e2a",SK="#F6CFB4",SH="#E9AE90",
  strands=(pts,c,w=.8)=>pts.map(d=>`<path d="${d}" fill="none" stroke="${c}" stroke-width="${w}" stroke-linecap="round"/>`).join(""),
  wrap=(id,defs,body)=>`<svg class="prt" viewBox="0 0 120 130" xmlns="http://www.w3.org/2000/svg"><defs><filter id="pk${id}" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".035" numOctaves="2" seed="${id.length*7}"/><feDisplacementMap in="SourceGraphic" scale="2.2"/></filter><radialGradient id="bl${id}"><stop offset="0" stop-color="#F08C8C" stop-opacity=".55"/><stop offset="1" stop-color="#F08C8C" stop-opacity="0"/></radialGradient>${defs}</defs><g filter="url(#pk${id})" stroke-linejoin="round" stroke-linecap="round">${body}</g></svg>`,
  blush=(id,y=80,dx=26)=>`<circle cx="${60-dx}" cy="${y}" r="9" fill="url(#bl${id})"/><circle cx="${60+dx}" cy="${y}" r="9" fill="url(#bl${id})"/>`;
+coat=(sh,extra="")=>`<path d="M14 130 Q18 106 44 101 L76 101 Q102 106 106 130Z" fill="#FBFBF8" stroke="${K}" stroke-width="1.5"/><path d="M48 101 L60 122 L72 101Z" fill="${sh}" stroke="${K}" stroke-width="1.3"/><path d="M44 101 L52 120 L58 130 M76 101 L68 120 L62 130" fill="none" stroke="${K}" stroke-width="1.3"/><path d="M78 116 H92 V126 H78Z" fill="none" stroke="${K}" stroke-width="1.1"/>${extra}`,
+ neck=`<path d="M53 92 L53 104 L67 104 L67 92Z" fill="${SH}" stroke="${K}" stroke-width="1.2"/>`,
+ head=(rx=33)=>`<path d="M60 20 C${60+rx} 20 ${62+rx} 44 ${61+rx} 64 C${60+rx} 86 78 100 60 100 C42 100 ${60-rx} 86 ${59-rx} 64 C${58-rx} 44 ${60-rx} 20 60 20Z" fill="${SK}" stroke="${K}" stroke-width="1.6"/>`,
+ ears=(dx=33)=>both(`<ellipse cx="${60-dx}" cy="64" rx="6" ry="9" fill="${SK}" stroke="${K}" stroke-width="1.4"/>`),
+ goggles=(y,c="#7FC8E8")=>`<rect x="31" y="${y-9}" width="25" height="18" rx="8" fill="${c}" fill-opacity=".55" stroke="${K}" stroke-width="2.2"/><rect x="64" y="${y-9}" width="25" height="18" rx="8" fill="${c}" fill-opacity=".55" stroke="${K}" stroke-width="2.2"/><path d="M56 ${y} H64 M31 ${y} H25 M89 ${y} H95" stroke="#3a3a3a" stroke-width="3"/><path d="M35 ${y-4} L40 ${y-6} M68 ${y-4} L73 ${y-6}" stroke="#fff" stroke-width="1.6"/>`,
+ tube=(c)=>`<path d="M82 104 V120 Q82 124 85 124 Q88 124 88 120 V104Z" fill="#fff" stroke="${K}" stroke-width="1.1"/><path d="M82 113 V120 Q82 124 85 124 Q88 124 88 120 V113Z" fill="${c}"/>`;
  const P={};
  // 🧪 oyuncu: çılgın profesör (beyaz dalgalı saç, kıvrık bıyık, turuncu yuvarlak gözlük, papyon)
  P.me=()=>wrap("me",hatch("me","#7a5a22"),`
@@ -551,6 +557,35 @@ const PRT=(()=>{const K="#3a2e2a",SK="#F6CFB4",SH="#E9AE90",
  <path d="M60 64 C56 70 55 74 58 76 C60 77 63 76 64 75" fill="none" stroke="${K}" stroke-width="1.4"/>
  <path d="M38 80 Q60 104 82 80 Q60 86 38 80Z" fill="#fff" stroke="${K}" stroke-width="1.4"/><path d="M42 84 Q60 98 78 84" fill="#C9475A" stroke="${K}" stroke-width="1"/><path d="M40 81 Q60 87 80 81 L79 85 Q60 90 41 85Z" fill="#fff" stroke="${K}" stroke-width=".9"/>${[48,54,60,66,72].map(x=>`<path d="M${x} 83 L${x} 88" stroke="#bbb" stroke-width=".7"/>`).join("")}
  ${both(`<path d="M36 82 Q34 78 37 76" fill="none" stroke="${K}" stroke-width="1.2"/>`)}`);
+
+ // 👥 kimyacılar (Kadro): laboratuvar önlüğü
+ P["Deniz Ural"]=()=>wrap("du","",`${coat("#6FA8DC",tube("#9DD8D4"))}${neck}${ears()}${head()}${blush("du",80,23)}
+ <path d="M27 60 C20 40 30 18 50 14 C66 8 92 18 94 40 C95 50 93 56 92 60 C88 46 82 40 74 38 C64 44 46 44 36 38 C32 44 29 52 27 60Z" fill="#3B2A22" stroke="${K}" stroke-width="1.3"/>
+ ${[[34,22],[46,14],[60,12],[74,16],[86,26],[28,36],[92,40]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="7" fill="#3B2A22" stroke="${K}" stroke-width="1.2"/>`).join("")}
+ ${goggles(36,"#F7B5C5")}
+ ${both(`<path d="M37 52 Q45 48 53 52" fill="none" stroke="#2a1c16" stroke-width="2.2"/>`)}${eye(45,62,8,4.5,"#5A3A2A",1.5)}${eye(75,62,8,4.5,"#5A3A2A",-1)}
+ <path d="M60 66 C57 74 55 78 58 80 C60 81 63 80 64 79" fill="none" stroke="${K}" stroke-width="1.4"/><path d="M48 86 Q60 96 72 86" fill="#fff" stroke="${K}" stroke-width="1.4"/>`);
+ P["Onur Sezer"]=()=>wrap("os","",`${coat("#87B76F",tube("#FACF71"))}${neck}${ears(34)}${head(34)}
+ <path d="M27 62 C26 52 28 44 32 40 M93 62 C94 52 92 44 88 40" stroke="#6b5a4a" stroke-width="5"/>
+ <path d="M30 22 Q60 12 90 22" fill="none" stroke="${SH}" stroke-width="1.4"/><ellipse cx="44" cy="30" rx="8" ry="4" fill="#fff" opacity=".45"/>
+ <path d="M28 70 C28 96 44 112 60 112 C76 112 92 96 92 70 C86 82 76 84 70 82 C64 78 56 78 50 82 C44 84 34 82 28 70Z" fill="#6b5a4a" stroke="${K}" stroke-width="1.4"/>${strands(["M40 92 L42 100","M50 96 L50 106","M60 98 L60 108","M70 96 L70 106","M80 92 L78 100"],"#4a3c30",1)}
+ <path d="M50 86 Q60 92 70 86" fill="#C9475A" stroke="${K}" stroke-width="1.2"/>
+ ${both(`<path d="M35 50 Q44 44 53 49" fill="none" stroke="#4a3c30" stroke-width="3"/>`)}${eye(45,60,8,4.5,"#4A6A3A",1.5)}${eye(75,60,8,4.5,"#4A6A3A",-1)}
+ <circle cx="45" cy="60" r="11" fill="none" stroke="#222" stroke-width="1.8"/><circle cx="75" cy="60" r="11" fill="none" stroke="#222" stroke-width="1.8"/><path d="M56 58 Q60 55 64 58" fill="none" stroke="#222" stroke-width="1.8"/>
+ <path d="M60 62 C54 66 52 74 55 78 C58 81 64 81 66 78 C68 74 66 66 60 62Z" fill="#F3B39C" stroke="${K}" stroke-width="1.4"/>`);
+ P["Gül Tekin"]=()=>wrap("gt","",`<path d="M80 30 C100 30 104 54 96 70 C92 60 88 50 82 46Z" fill="#1F1A1C" stroke="${K}" stroke-width="1.3"/>${coat("#F5BFD2",tube("#F26D8C"))}${neck}${ears(31)}${head(31)}${blush("gt",80,22)}
+ <path d="M28 66 C22 40 36 18 60 18 C84 18 98 40 92 66 C90 50 84 40 76 36 C66 44 48 46 36 38 C32 46 30 54 28 66Z" fill="#1F1A1C" stroke="${K}" stroke-width="1.3"/>${strands(["M40 28 C50 22 62 20 74 24","M34 44 C36 34 42 28 50 24"],"#55505a",1)}
+ <circle cx="88" cy="24" r="4" fill="#E8434F" stroke="${K}" stroke-width="1"/>
+ ${both(`<path d="M37 50 Q45 46 53 50" fill="none" stroke="#1F1A1C" stroke-width="2.2"/>`)}${eye(45,62,9,5,"#3a2a20",1.5)}${eye(75,62,9,5,"#3a2a20",-1)}
+ ${goggles(62,"#9DD8D4")}${both(`<path d="M34 58 L31 55 M36 55 L34 51" stroke="${K}" stroke-width="1.2"/>`)}
+ <path d="M60 70 C58 76 56 79 59 81 C61 82 63 81 64 80" fill="none" stroke="${K}" stroke-width="1.4"/><path d="M50 88 Q60 94 70 88 Q60 98 50 88Z" fill="#D8343F" stroke="${K}" stroke-width="1.2"/>`);
+ P["Barış Erol"]=()=>wrap("be","",`${coat("#FBC2A3",`<path d="M52 104 L46 99 L46 109Z M68 104 L74 99 L74 109Z" fill="#37898C" stroke="${K}" stroke-width="1.1"/><circle cx="60" cy="104" r="2.5" fill="#37898C" stroke="${K}" stroke-width="1"/>`+tube("#87B76F"))}${neck}${ears(32)}${head(32)}${blush("be",80,23)}
+ <path d="M29 56 C26 40 32 26 44 20 C40 10 56 2 74 6 C90 10 96 24 90 30 C94 38 94 48 91 56 C88 44 80 38 72 38 C62 42 48 42 38 38 C34 42 31 48 29 56Z" fill="#9A5B2E" stroke="${K}" stroke-width="1.3"/>${strands(["M48 16 C56 8 70 6 82 12","M44 24 C54 16 70 14 84 22"],"#6b3c1c",1.1)}
+ ${both(`<path d="M37 51 Q45 47 53 51" fill="none" stroke="#6b3c1c" stroke-width="2.4"/>`)}${eye(45,62,9,5,"#3F8F5A",1.5)}${eye(75,62,9,5,"#3F8F5A",-1)}
+ ${[[40,74],[44,77],[78,74],[74,77],[42,79],[80,78]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r=".9" fill="#B8714A"/>`).join("")}
+ <path d="M60 64 C55 70 53 78 56 81 C58 83 63 83 65 81 C67 78 65 70 60 64Z" fill="#F3B39C" stroke="${K}" stroke-width="1.4"/>
+ <path d="M60 85 C54 82 46 83 42 87 C46 88 52 89 60 88 C68 89 74 88 78 87 C74 83 66 82 60 85Z" fill="#9A5B2E" stroke="${K}" stroke-width="1.2"/><path d="M50 91 Q60 97 70 91" fill="none" stroke="${K}" stroke-width="1.4"/>
+ ${goggles(110,"#9DD8D4").replace(/y="101"/g,'y="101"')}`);
  return id=>(P[id]||P.me)()})();
 function finansHtml(){const rows=PFR.map(p=>[p[0],pfFin(p[0])]),tr=(n,v,c)=>`<tr><td>${n}</td><td class="n${c?" "+c:""}">${tl(v)}</td></tr>`;
  return `<div class="sheet"><div class="spread"><h2>💰 Parfümatörlerin Finansı</h2><span class="lbl">gün ${MAG.day}</span></div><div class="muted">Senin ve rakip parfümatörlerin gelirleri, giderleri ve durumu. Rakiplerin giderleri tahminidir: atölye kirası, maaşlar ve numune masrafı.</div>
@@ -1757,7 +1792,7 @@ function kadroHtml(){const col={parf:"#7b2d1e",kim:"#4f6a2e",ceo:"#2f4a6a"},P=PZ
  <div class="muted">Biten her formül 10 + kalite puanının dörtte biri kadar, laboratuvardaki her keşif 20 deneyim verir. Seviye atlayınca gelen puanı istediğin kişinin istediğin yeteneğine ver (en fazla Lv20).</div></div>`;
  h+=`<div class="sheet"><div class="spread"><h2>👥 Çalışanlar</h2><span class="lbl">yeteneğin üstüne gel ya da bas, açıklaması görünsün</span></div><div class="kgrid">`;
  ["parf","kim"].forEach(r=>{const S=KD[r],pts=KD.pts,list=KSK[r].sk.filter(([k])=>S.sk[k]!=null);
-  h+=`<div class="kcard"><div class="kh">${avatar(S.n,col[r])}<div><b>${esc(S.n)}</b><div class="lbl">${KSK[r].n}${r==="parf"?` · ${P.n}`:""} · ort. Lv${r==="ceo"?Math.round(kAvg("ceo")):Math.round(kAvg(r))}</div></div><span></span></div>`;
+  h+=`<div class="kcard"><div class="kh kpr">${PRT(r==="parf"?"me":S.n)}<div><b>${esc(S.n)}</b><div class="lbl">${KSK[r].n}${r==="parf"?` · ${P.n}`:""} · ort. Lv${r==="ceo"?Math.round(kAvg("ceo")):Math.round(kAvg(r))}</div></div><span></span></div>`;
   list.forEach(([k,n,d])=>{const v=S.sk[k],idle=r==="ceo"&&!K_ACTIVE.includes(k);
    h+=`<div class="krow" title="${esc(d)}${idle?" · şimdilik etkisiz":""}"><span>${n}${idle?' <span class="mnote">(etkisiz)</span>':""}</span><b class="num" style="min-width:0">Lv${v}</b><button class="pm" data-act="kup" data-r="${r}" data-k="${k}" aria-label="${n} yükselt" ${pts&&v<20?"":"disabled"}>+</button></div>`});
   h+=`${r==="parf"?`<div class="mnote">Yeni AR-GE’de: sezgi ±${P.zone} · Koklat ${P.hak} hak, ±${P.err} hata · tavan ${P.cap}</div>`:r==="kim"?`<div class="mnote">Laboratuvar: koku toleransı ${labTol()} · akor toleransı ${akTol()} damla</div>`:`<div class="row"><button class="btn ghost" data-act="kceo">Yetenekleri değiştir</button></div>`}</div>`});
