@@ -132,7 +132,23 @@ body{background-color:var(--paper2);background-image:var(--noise),var(--mottle),
 #bnav{display:none}
 .clk .seg button{padding:4px 8px}.clkbar{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:92px;height:26px;padding:0 8px;border:1.5px solid #37898C;border-radius:8px;background:#fff;overflow:hidden;color:#000;font-weight:800;font-size:13px;white-space:nowrap}.clkbar i{position:absolute;left:0;top:0;bottom:0;background:#9DD8D4}.clkbar b{position:relative}.clkbar.tick{animation:clkT .7s ease-out}@keyframes clkT{0%{transform:scale(1.18);background:#FCEEBE}100%{transform:scale(1)}}
 .mapw{border:1px solid var(--rule);background:var(--chip);background-image:var(--noise)}.map{width:100%;height:auto;display:block}.map .city{cursor:pointer}.map .city:focus-visible circle{stroke:var(--accent);stroke-width:3}
+.brsum,.mobbar{display:none}
 @media (max-width:700px){
+ .brsum{display:flex;justify-content:space-between;align-items:center;width:100%;box-sizing:border-box;margin:0 0 10px;padding:10px 14px;border-radius:14px;background:#9DD8D4;border:2px solid #37898C;font:800 15px var(--fu,inherit);color:#000;text-align:left;cursor:pointer}
+ .brw{display:none}.brw.open{display:block}
+ .argetop .lvrow{display:none}.argetop .sez4{display:none}
+ .note{background:color-mix(in srgb,var(--fc) 22%,#fff);border:1.5px solid var(--fc);border-radius:12px;padding:8px 10px;border-bottom:1.5px solid var(--fc)}
+ .note .fpill{background:none!important;border:0!important;padding:0;font-size:17px;font-weight:800}
+ .note .fam{display:block!important;margin:2px 0 0!important;font-size:12px}
+ .note .pm{width:38px;height:38px;min-width:38px;border-radius:50%;background:#fff;border:1.5px solid #333;font-size:18px;font-weight:800}
+ .note .num{font-size:16px;font-weight:800}
+ .notes{gap:7px}
+ .add{display:block}.add>.lbl{display:none}.npb{width:100%;border:2px dashed #87B76F!important;background:#eef7e8!important;border-radius:14px!important;font-weight:800;color:#2f6a1f}
+ .mobbar{display:block;position:fixed;left:0;right:0;bottom:0;z-index:50;background:#9DD8D4;border-top:2px solid #37898C;padding:8px 12px 12px;box-shadow:0 -4px 14px rgba(0,0,0,.12)}
+ .mobbar .mbs{display:flex;justify-content:space-between;gap:6px;font-weight:800;font-size:14px;color:#000}
+ .mobbar .mbb{display:flex;justify-content:space-between;align-items:center;gap:6px;margin-top:6px}.mobbar .mnote{font-size:12px;color:#000;font-style:normal}
+ .mobbar .btn{padding:7px 12px;font-size:14px}
+ body:has(.mobbar){padding-bottom:110px}
  .menu{display:none}.brand{font-size:21px}
  .strip{font-size:13px;gap:4px 12px;padding:5px 8px}
  #bnav{display:block;position:fixed;left:0;right:0;bottom:0;z-index:6}
@@ -1010,6 +1026,13 @@ const tl=x=>Math.round(x).toLocaleString("tr-TR")+" TL";
 // formül kurulurken canlı birim maliyet: formülün kendisi + tahmini şişe; siparişte sınırla karşılaştırır
 function syLive(){const N=allNotes();if(!N.length)return "";const y=syOf(LAY.flatMap(L=>G.sel[L].map(x=>({k:x.k,p:x.p,l:L}))),G.conc),b=G.brief&&brOf()&&brOf().id===G.brief?brOf():null,C=b?SIRD(b.co):null;
  return `<div class="mnote" style="font-size:15px;color:#000">🌫️ Siyaj: <b>${y.v} · ${syBand(y.v)}</b> <span style="font-size:13px;color:#333">(güçlü notalar %${y.st}${C?`; ${esc(C.n)} ${C.sy.toLowerCase()} istiyor`:""})</span>${y.pen?` <span class="bad">⚠️ boğucu: güçlü notalar formülün yarısını geçti, kalite −${y.pen}</span>`:""}</div>`}
+// 📱 telefon AR-GE düzeni (CEKO 2026-10-23): tek satır sipariş, altta sabit sonuç şeridi; bilgisayarda görünmez
+function brSumHtml(){const b=brOf();if(!b)return `<div class="brsum"><span>📨 Açık sipariş yok</span></div>`;const C=SIRD(b.co);
+ return `<button class="brsum" data-act="brtog" aria-expanded="${!!UI.brOpen}"><span>📨 ${esc(C.n)}${b.ac?" 🏁":""} · ⏳ ${b.end-MAG.day} gün</span><span>${UI.brOpen?"▴":"▾"}</span></button>`}
+function mobBarHtml(){const N=allNotes();if(G.done||!N.length)return "";const W=N.reduce((a,x)=>a+x.p,0)||1,sea=[1,2,3,4].map(i=>N.reduce((a,x)=>a+NB[x.k]["s"+i]*x.p,0)/W),z=sezOf(sea),
+ y=syOf(LAY.flatMap(L=>G.sel[L].map(x=>({k:x.k,p:x.p,l:L}))),G.conc),c=costs(60,3),f=c.ham+c.fire+c.alk+c.isc+c.nak,b=G.brief&&brOf()&&brOf().id===G.brief?brOf():null,bud=b?SISE_BUT[SIRD(b.co).fg]:[40,110],o=orgPct(N),ok=complete();
+ return `<div class="mobbar"><div class="mbs"><span>${SEZ_IC[z]||"🍂"} ${esc(z||"")}</span><span>🌱 %${o}</span><span>🌫️ ${y.v} ${esc(syBand(y.v))}</span><span>💰 ${tl(f+15+Math.round((bud[0]+bud[1])/2))}</span></div>
+ <div class="mbb"><span class="mnote">${LAY.map((L,i)=>`${LN[L][0]} %${Math.round(G.L[L])}`).join(" · ")}</span><span class="row" style="gap:6px"><button class="btn ghost" data-act="kok" ${G.hak<=0||!ok?"disabled":""}>👃 Koklat (${G.hak})</button><button class="btn" data-act="fin" ${ok?"":"disabled"}>✅ Bitir</button></span></div></div>`}
 function costLive(){if(!allNotes().length)return "";const c=costs(60,3),f=c.ham+c.fire+c.alk+c.isc+c.nak,b=G.brief&&brOf()&&brOf().id===G.brief?brOf():null,C=b?SIRD(b.co):null,bud=C?SISE_BUT[C.fg]:[40,110],sise=15+Math.round((bud[0]+bud[1])/2),top=f+sise;
  return `<div class="mnote" style="font-size:15px;color:#000">💰 Tahmini birim maliyet: <b>${tl(top)}</b> <span style="font-size:13px;color:#333">(formül ${tl(f)} + şişe ≈ ${tl(sise)}${C?`, ${esc(C.n)} şişe bütçesinin ortası`:""}; şişeyi tasarlayınca kesinleşir)</span>${b&&b.maxF!=null?`<br>💧 Formül ${tl(f)} · sınır <b>${tl(b.maxF)}</b> ${f<=b.maxF?`<span class="ok">✓ ${tl(b.maxF-f)} ucuz (prim)</span>`:f<=b.maxF*1.1?`<span class="bad">⚠️ ${tl(f-b.maxF)} aşıyor (kesinti)</span>`:`<span class="bad">❌ ${tl(f-b.maxF)} aşıyor (almaz)</span>`} · 🍾 şişe ${tl(b.sMin)}–${tl(b.sMax)} arası olmalı`:""}</div>`}
 // eski oyundan: el çizimi laboratuvar şişesi (prodFlask), bu sayfanın verisine uyarlandı
@@ -2283,7 +2306,7 @@ function clkHtml(){return `<span class="row clk" style="gap:4px"><span class="se
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function render(){if(["uretim","depo","magaza"].includes(UI.tab))UI.tab="genel";drawNav();if(UI.tab!=="masa"){document.getElementById("app").innerHTML=(UI.tab==="genel"?genelHtml()+dunyaHtml():UI.tab==="gazete"?gazeteHtml():UI.tab==="yarisma"?yarismaHtml():UI.tab==="rehber"?rehberHtml():UI.tab==="lab"?labHtml():UI.tab==="kadro"?kadroHtml():UI.tab==="sirket"?sirketHtml():UI.tab==="finans"?finansHtml():UI.tab==="formul"?formulHtml():UI.tab==="kilit"?kilitHtml():UI.tab==="piyasa"?piyasaHtml():UI.tab==="musteri"?musteriPage():UI.tab==="magaza"?magazaHtml():UI.tab==="uretim"?uretimHtml():UI.tab==="hammadde"?hmHtml():depoHtml());return}
  const app=document.getElementById("app"),tg=target(),T=tg.T,ok=complete(),drops=CONC[G.conc]*20,fs=famShares(),ft=fs.reduce((a,x)=>a+x[1],0)||1;
- let h=tabsHtml()+briefHtml()+`<div class="sheet"><div class="spread"><div class="row"><span class="lbl">Parfümatör</span><b>${esc(KD.parf.n)}</b></div>
+ let h=tabsHtml()+brSumHtml()+`<div class="brw${UI.brOpen?" open":""}">`+briefHtml()+`</div><div class="sheet argetop"><div class="spread"><div class="row lvrow"><span class="lbl">Parfümatör</span><b>${esc(KD.parf.n)}</b></div>
  <div class="row"><span class="lbl">Kalıp</span><b style="font-family:var(--fu)">${G.pat.join(" / ")}</b><span class="mnote">${patBoy()[0]} · ${patSum()} nota · kalite tavanı ${G.P.cap+patBoy()[1]}</span><button class="btn ghost" data-act="pull" ${G.lock?"disabled":""}>Yeni kalıp çek (×${Math.pow(2,G.pulls)})</button></div>${G.sample&&!G.done?`<div class="kalfam">🎲 Çıkan aile kokusu: <b>${FAM_IC[G.sample]||""} ${esc(G.sample)}</b> ağırlıklı örnek formül masada (paylar eşit). Notaları değiştir, payları ayarla.</div>`:""}</div>
  ${sezScale()}${orgScale()}</div>`;
  h+=`<div class="cols"><div class="sheet"><div class="spread"><h2>Formül</h2><span class="lbl">esansın %100'ü</span></div>
@@ -2291,7 +2314,7 @@ function render(){if(["uretim","depo","magaza"].includes(UI.tab))UI.tab="genel";
  <div class="muted">${G.conc} = %${CONC[G.conc]} esans → 100 ml'de ${drops} damla esans, ${2000-drops} damla %96 etanol.</div>`;
  LAY.forEach((L,i)=>{const S=G.sel[L],full=S.length>=G.pat[i];
   h+=`<div class="layer"><div class="spread"><b>${LN[L]} notalar</b><span class="lbl">${S.length}/${G.pat[i]} nota · katman %${fmt(G.L[L])}</span></div><div class="notes">`;
-  S.forEach((x,j)=>{const n=NB[x.k];h+=`<div class="note"><span class="nm">${fpill(esc(n.tr),n.fam)}<span class="fam">${esc(n.fam)} · ${SEZ_NOTE(x.k)} · ${orgTip(x.k)==="dogal"?"🌱":"🧪"} · ${n.price} TL/10 ml · güç ${n.g}</span></span>
+  S.forEach((x,j)=>{const n=NB[x.k];h+=`<div class="note" style="--fc:${GLASS[n.fam]||"#bbb"}"><span class="nm">${fpill(esc(n.tr),n.fam)}<span class="fam">${esc(n.fam)} · ${SEZ_NOTE(x.k)} · ${orgTip(x.k)==="dogal"?"🌱":"🧪"} · ${n.price} TL/10 ml · güç ${n.g}</span></span>
    <span class="row" style="gap:4px"><button class="pm" data-act="n-" data-l="${L}" data-i="${j}" aria-label="${esc(n.tr)} azalt" ${G.done?"disabled":""}>−</button><span class="num">%${fmt(x.p)}</span><button class="pm" data-act="n+" data-l="${L}" data-i="${j}" aria-label="${esc(n.tr)} artır" ${G.done?"disabled":""}>+</button></span>
    <span class="row" style="gap:2px"><span class="num" style="min-width:48px">${Math.round(x.p/100*drops)} dml</span><button class="chipb" data-act="del" data-l="${L}" data-i="${j}" aria-label="${esc(n.tr)} çıkar" ${G.done||G.lock?"disabled":""}>×</button></span></div>`});
   h+=`</div>${!full&&!G.done&&!G.lock?`<div class="add"><span class="lbl" style="align-self:center">Nota ekle</span><div class="npick"><button class="btn ghost npb" data-act="npick" data-l="${L}" aria-expanded="${UI.npick===L}">${LN[L]} katmandan seç… ▾</button>${UI.npick===L?`<div class="nplist">${(()=>{const row=k=>`<button class="npo" data-act="npadd" data-l="${L}" data-k="${k}">${fpill(esc(NB[k].tr),NB[k].fam)}<span class="npi">${SEZ_NOTE(k)} ${orgTip(k)==="dogal"?"🌱":"🧪"} · ${NB[k].price} TL · güç ${NB[k].g}</span></button>`;
@@ -2308,11 +2331,12 @@ function render(){if(["uretim","depo","magaza"].includes(UI.tab))UI.tab="genel";
   ${ok?"":`<div class="muted">Bitirmek için her katmanı kalıp kadar doldur.</div>`}${G.log.length?`<div class="log">${G.log.map(t=>`<div>${esc(t)}</div>`).join("")}</div>`:""}`}
  else if(rdWait())h+=rdWaitHtml();
  else{const d=G.done,s=d.s;h+=`<div class="verdict"><div class="lbl">${esc(d.name)} · ${d.conc} · ${LV[d.lv].n} parfümatör</div><div class="spread"><span class="tier">${TIERS[d.tier]}</span><span class="big">${d.q}</span></div>${(d.akNew||[]).length?`<div><b>Bu akoru ilk kez bir parfümde kullandın:</b> ${d.akNew.map(id=>ACDD(id).ic+" "+esc(ACDD(id).n)).join(", ")}</div>`:""}<div class="mnote">+${d.xp||0} deneyim${d.lvUp?` · <b>Seviye atladın: Lv${KD.lv}, Kadro’da dağıtılacak ${KD.pts} puan var</b>`:""}</div><div class="muted">Üretim kartı aşağıda.</div><div class="row">${brOf()&&brOf().st==="masada"&&(!d.brief||d.brief===brOf().id)?`<button class="btn" data-act="brsend">📨 Müşteriye gönder</button>`:""}${brOf()&&brOf().st==="sise"&&brOf().did===d.id?`<button class="btn" data-act="brsend">🍾 Düzelttiğim şişeyi gönder</button>`:""}${!(brOf()&&(brOf().st==="masada"||brOf().st==="sise"))&&!EV().sold[d.id]?`<button class="btn" data-act="sun" data-id="${d.id}">🏛️ Şirketlere sun</button>`:""}${MAG.day<(MAG.invNext||0)?`<span class="mnote">Yeni icat ${MAG.invNext-MAG.day} gün sonra</span>`:`<button class="btn" data-act="new">Yeni AR-GE</button>`}<button class="btn ghost" data-act="reshift">Yeni oyun (oranlar yeniden kayar)</button></div></div>`}
- h+=`</div></div>`;if(G.done&&!rdWait())h+=`<div class="sheet">${cardHtml(G.done)}</div>${G.done.ds?`<div class="sheet">${dsEditorHtml(G.done)}</div>`:""}`;h+=archiveHtml();const npS=(document.querySelector(".nplist")||{}).scrollTop||0;app.innerHTML=h;const npl=document.querySelector(".nplist");if(npl&&npS)npl.scrollTop=npS}
+ h+=`</div></div>`;if(G.done&&!rdWait())h+=`<div class="sheet">${cardHtml(G.done)}</div>${G.done.ds?`<div class="sheet">${dsEditorHtml(G.done)}</div>`:""}`;h+=archiveHtml()+mobBarHtml();const npS=(document.querySelector(".nplist")||{}).scrollTop||0;app.innerHTML=h;const npl=document.querySelector(".nplist");if(npl&&npS)npl.scrollTop=npS}
 
 document.addEventListener("keydown",e=>{const r=e.target.closest&&e.target.closest(".rki,.city");if(r&&(e.key==="Enter"||e.key===" ")){e.preventDefault();r.dispatchEvent(new MouseEvent("click",{bubbles:true}))}});
 document.addEventListener("click",e=>{if(UI.npick&&!e.target.closest(".npick")){UI.npick=null;render()}const b=e.target.closest("[data-act]");if(!b||b.disabled)return;const a=b.dataset.act,L=b.dataset.l,i=+b.dataset.i;
  if(a==="npick"){UI.npick=UI.npick===L?null:L;render();return}
+ if(a==="brtog"){UI.brOpen=!UI.brOpen;render();return}
  if(a==="npadd"){UI.npick=null;addNote(L,b.dataset.k);G.sample=null;render();return}
  if(a==="spd"){CLK.spd=+b.dataset.v;lsSet("p2.spd",CLK.spd);drawNav();return}
  if(a==="gamereset"){UI.resetAsk=!UI.resetAsk;drawNav();return}
