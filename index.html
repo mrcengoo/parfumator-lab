@@ -130,7 +130,7 @@ body{background-color:var(--paper2);background-image:var(--noise),var(--mottle),
 .sen{border:1px solid var(--moss);color:var(--moss);font:11px var(--fu);padding:0 5px;border-radius:99px;margin-left:4px}
 .strip .btn{padding:4px 10px}
 #bnav{display:none}
-.clk .seg button{padding:4px 8px}.clkbar{display:inline-block;width:46px;height:8px;border:1px solid var(--ink2);background:var(--paper)}.clkbar i{display:block;height:100%;background:var(--moss)}
+.clk .seg button{padding:4px 8px}.clkbar{position:relative;display:inline-flex;align-items:center;justify-content:center;min-width:92px;height:26px;padding:0 8px;border:1.5px solid #37898C;border-radius:8px;background:#fff;overflow:hidden;color:#000;font-weight:800;font-size:13px;white-space:nowrap}.clkbar i{position:absolute;left:0;top:0;bottom:0;background:#9DD8D4}.clkbar b{position:relative}.clkbar.tick{animation:clkT .7s ease-out}@keyframes clkT{0%{transform:scale(1.18);background:#FCEEBE}100%{transform:scale(1)}}
 .mapw{border:1px solid var(--rule);background:var(--chip);background-image:var(--noise)}.map{width:100%;height:auto;display:block}.map .city{cursor:pointer}.map .city:focus-visible circle{stroke:var(--accent);stroke-width:3}
 @media (max-width:700px){
  .menu{display:none}.brand{font-size:21px}
@@ -214,7 +214,7 @@ body,#nav,.bbar,.moreSheet,.sheet,.pcard,.verdict,.mapw,.card{background-image:n
 /* telefonda üst şerit ince: başlık gizli, stok ve sıfırla Diğer menüsünde */
 @media (max-width:700px){#nav{padding-top:6px;padding-bottom:6px;gap:0;margin-bottom:10px}#nav .topnav{display:none}
  #nav .strip{display:flex;flex-wrap:wrap;gap:4px 10px;padding:5px 8px;font-size:13px;align-items:center}
- #nav .strip .co b{font-size:14px}#nav .strip .sen,#nav .strip .stk-s,#nav .clk>[data-act="gamereset"],#nav .clkbar{display:none}
+ #nav .strip .co b{font-size:14px}#nav .strip .sen,#nav .strip .stk-s,#nav .clk>[data-act="gamereset"]{display:none}
  #nav .clk .seg button{padding:3px 7px;font-size:12.5px}#nav .strip>.btn{padding:3px 8px;font-size:12.5px;margin-left:auto}}
 /* Tatlı paleti (CEKO 2026-10-21): zemin beyaz, başlıklar Fruit Tart/Macaron/Ice lollies/Thai tea/Cupcake renkleri, yazılar siyah ve belirgin */
 :root,:root[data-theme="dark"],:root[data-theme="light"]{--ink:#000000;--ink2:#262626;--rule:#cfcfd6;--accent:#37898C;--tabon:#37898C;
@@ -1047,7 +1047,7 @@ function tabsHtml(){return ""}
 const navBtn=([k,ic,n],cls)=>`<button class="${cls}${UI.tab===k?" on":""}" data-act="tab" data-v="${k}" aria-current="${UI.tab===k?"page":"false"}">${ic} ${n}${k==="kadro"&&KD.pts?` <span class="dot">${KD.pts}</span>`:""}</button>`;
 function drawNav(){const stok=MAG.items.reduce((a,x)=>a+x.stok*x.unit,0),cnt=MAG.items.reduce((a,x)=>a+x.stok,0);
  document.getElementById("nav").innerHTML=`<div class="topnav"><div class="brand">Parfümatör Laboratuvarı</div><nav class="menu" aria-label="Bölümler">${NAV.map(x=>navBtn(x,"tabb")).join("")}</nav></div>
- <div class="strip"><span class="co">🧪 <b>${esc(MAG.co)}</b> <span class="sen">SEN</span></span><span>Nakit <b>${tl(MAG.cash)}</b></span><span class="stk-s">Formül geliri <b>${tlk(EV().gelir)}</b></span><span>🌍 <b>${worldOf("me").length}</b> ülke</span><span>Gün <b>${MAG.day}</b> · ${SEAS[Math.floor(MAG.day/30)%4]}</span>${clkHtml()}<button class="btn ghost" data-act="day" title="Bir gün ilerlet">+1 gün</button></div>`;
+ <div class="strip"><span class="co">🧪 <b>${esc(MAG.co)}</b> <span class="sen">SEN</span></span><span>Nakit <b>${tl(MAG.cash)}</b></span><span class="stk-s">Formül geliri <b>${tlk(EV().gelir)}</b></span><span>🌍 <b>${worldOf("me").length}</b> ülke</span><span>${SEAS[Math.floor(MAG.day/30)%4]}</span>${clkHtml()}<button class="btn ghost" data-act="day" title="Bir gün ilerlet">+1 gün</button></div>`;
  const more=NAV.filter(x=>!BNAV.includes(x[0])),moreOn=more.some(x=>x[0]===UI.tab);
  document.getElementById("bnav").innerHTML=`${UI.more?`<div class="moreSheet">${more.map(x=>navBtn(x,"tabb")).join("")}<button class="tabb" data-act="gamereset">↺ Oyunu sıfırla</button></div>`:""}<nav class="bbar" aria-label="Alt menü">${NAV.filter(x=>BNAV.includes(x[0])).map(([k,ic,n,sh])=>`<button class="${UI.tab===k?"on":""}" data-act="tab" data-v="${k}"><span class="bi">${ic}</span>${sh}</button>`).join("")}<button class="${moreOn||UI.more?"on":""}" data-act="more" aria-expanded="${!!UI.more}"><span class="bi">☰</span>Diğer</button></nav>`}
 // Genel Bakış: kasa, dünkü satış, şirketlerin parası, haberler
@@ -2155,9 +2155,9 @@ function magazaHtml(){sefInit();rkInit();const sel=MAG.sef.find(s=>s.id===UI.sef
 // akan saat: 1× hızda 10 saniyede bir gün; ekran gizliyse durur
 const CLK={spd:lsGet("p2.spd")??1,acc:0,last:performance.now()};
 function clkTick(){const now=performance.now(),dt=now-CLK.last;CLK.last=now;if(!CLK.spd||document.hidden)return;CLK.acc+=dt*CLK.spd;
- if(CLK.acc>=10000){CLK.acc=0;dayPass();const a=document.activeElement;if(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)||UI.npick)drawNav();else render()}else{const b=document.querySelector(".clkbar i");if(b)b.style.width=(CLK.acc/100).toFixed(0)+"%";if(UI.tab==="magaza")sefAnim()}}
+ if(CLK.acc>=10000){CLK.acc=0;CLK.flT=performance.now();dayPass();const a=document.activeElement;if(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)||UI.npick)drawNav();else render()}else{const b=document.querySelector(".clkbar i");if(b)b.style.width=(CLK.acc/100).toFixed(0)+"%";if(UI.tab==="magaza")sefAnim()}}
 setInterval(clkTick,250);
-function clkHtml(){return `<span class="row clk" style="gap:4px"><span class="seg">${[[0,"⏸ Dur"],[1,"1×"],[2,"2×"],[5,"5×"]].map(([v,n])=>`<button data-act="spd" data-v="${v}" aria-pressed="${CLK.spd===v}">${n}</button>`).join("")}</span><span class="clkbar" title="sonraki güne"><i style="width:${(CLK.acc/100).toFixed(0)}%"></i></span><button class="btn ghost" data-act="gamereset" aria-expanded="${!!UI.resetAsk}">↺ Sıfırla</button>${UI.resetAsk?`<span class="row rsk" style="gap:4px"><span class="bad">Her şey silinsin mi?</span><button class="btn" data-act="gamereset2">Evet, sıfırla</button><button class="btn ghost" data-act="gamereset">Vazgeç</button></span>`:""}</span>`}
+function clkHtml(){return `<span class="row clk" style="gap:4px"><span class="seg">${[[0,"⏸ Dur"],[1,"1×"],[2,"2×"],[5,"5×"]].map(([v,n])=>`<button data-act="spd" data-v="${v}" aria-pressed="${CLK.spd===v}">${n}</button>`).join("")}</span><span class="clkbar${CLK.flT&&performance.now()-CLK.flT<700?" tick":""}" title="geçen gün; dolunca bir gün daha geçer"><i style="width:${(CLK.acc/100).toFixed(0)}%"></i><b>📅 Gün ${MAG.day}</b></span><button class="btn ghost" data-act="gamereset" aria-expanded="${!!UI.resetAsk}">↺ Sıfırla</button>${UI.resetAsk?`<span class="row rsk" style="gap:4px"><span class="bad">Her şey silinsin mi?</span><button class="btn" data-act="gamereset2">Evet, sıfırla</button><button class="btn ghost" data-act="gamereset">Vazgeç</button></span>`:""}</span>`}
 
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 function render(){if(["uretim","depo","magaza"].includes(UI.tab))UI.tab="genel";drawNav();if(UI.tab!=="masa"){document.getElementById("app").innerHTML=(UI.tab==="genel"?genelHtml()+dunyaHtml():UI.tab==="gazete"?gazeteHtml():UI.tab==="yarisma"?yarismaHtml():UI.tab==="lab"?labHtml():UI.tab==="kadro"?kadroHtml():UI.tab==="sirket"?sirketHtml():UI.tab==="finans"?finansHtml():UI.tab==="formul"?formulHtml():UI.tab==="kilit"?kilitHtml():UI.tab==="piyasa"?piyasaHtml():UI.tab==="musteri"?musteriPage():UI.tab==="magaza"?magazaHtml():UI.tab==="uretim"?uretimHtml():UI.tab==="hammadde"?hmHtml():depoHtml());return}
