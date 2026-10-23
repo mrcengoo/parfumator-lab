@@ -281,6 +281,16 @@ h1,h2,h3,.brand{color:#000;font-weight:700}
 input[type=search]{background:#fff!important;color:#000!important;border:1.5px solid #000;border-radius:8px;padding:6px 10px;font:inherit;color-scheme:light}
 input[type=search]::placeholder{color:#444;opacity:1}
 .kpr .prt{width:76px;height:82px;background:#FBF8F2;border:1px solid #000;border-radius:10px}.fcard{display:flow-root}.fbot{float:left;margin:0 10px 6px 0;padding:4px;background:#FBF8F2;border:1px solid #000;border-radius:10px;line-height:0}.fbot svg{height:130px;width:auto;max-width:none}
+.celo{position:fixed;inset:0;z-index:999;background:rgba(40,30,30,.45);display:flex;align-items:center;justify-content:center;padding:16px;overflow:hidden;animation:celf .25s ease-out}
+.celc{position:absolute;inset:0;pointer-events:none}.celc i{position:absolute;top:-20px;display:block;animation:celfall linear forwards}
+.celk{position:relative;background:#fff;border:2px solid #000;border-radius:18px;max-width:380px;width:100%;padding:18px 18px 16px;text-align:center;box-shadow:0 10px 0 rgba(0,0,0,.15);animation:celpop .45s cubic-bezier(.2,1.6,.4,1)}
+.celic{font-size:40px;line-height:1;margin-top:-44px;margin-bottom:4px;filter:drop-shadow(0 2px 0 #fff)}
+.celw{display:flex;gap:10px;justify-content:center;margin:4px 0 10px}.celp{width:96px;animation:celbob 1.6s ease-in-out infinite alternate}.celp svg{width:100%;height:auto;display:block;background:#FBF8F2;border:1px solid #000;border-radius:10px}
+.celh{font:700 22px/1.25 var(--fh,Georgia),serif;margin:4px 0 6px}.cels{font-size:15px;line-height:1.5;color:#222}.celm{font:700 30px var(--fu,monospace);color:#2E7D32;margin:8px 0 2px}
+.celg{margin:12px auto 4px;max-width:270px;background:#FCFAF4;border:1px solid #000;padding:6px 10px;transform:rotate(-2deg);box-shadow:2px 3px 0 rgba(0,0,0,.12)}.celgt{font:400 18px "UnifrakturMaguntia","IM Fell English SC",serif;border-bottom:1px solid #000;padding-bottom:2px}.celgh{font:700 15px/1.3 Georgia,serif;margin-top:4px}.celgd{font-size:11px;color:#555;margin-top:2px}
+.celb{margin-top:12px;font-size:17px;padding:8px 22px}
+@keyframes celf{from{opacity:0}}@keyframes celpop{from{transform:scale(.6);opacity:0}}@keyframes celbob{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(-6px) rotate(2deg)}}@keyframes celfall{to{top:110%;transform:translateX(40px) rotate(720deg)}}
+@media (prefers-reduced-motion:reduce){.celo,.celk,.celp{animation:none}}
 .pfhd{display:flex;gap:10px;align-items:center;margin-bottom:4px}.pfhd .prt{width:96px;height:104px;flex:none;background:#FBF8F2;border:1px solid #000;border-radius:10px}.pfhd b{font-size:16px}
 .cohd{display:flex;gap:10px;align-items:center;margin-bottom:6px}.cohd .mask{width:84px;flex:none;display:block;filter:drop-shadow(1px 2px 0 rgba(0,0,0,.15))}
 table.fin{width:100%;border-collapse:collapse;font-size:14px}table.fin th{text-align:left;font:700 12px var(--fu);letter-spacing:.08em;padding:8px 0 2px;border-bottom:2px solid var(--p5b)}table.fin td{padding:3px 0;border-bottom:1px dotted #ddd}table.fin td.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;padding-left:8px}
@@ -783,7 +793,8 @@ function evAcc(c,kind){const E=EV(),S=E.sun;if(!S||MAG.day>S.d+SUN_GUN)return;co
 function evClose(c,d,deal,sc,u){const E=EV(),f=pfFromDone(d);if(u)f.u=u;const CU=SIRD(c).ulke,kn=CU.filter(x=>((E.tan||{})[d.id]||[]).includes(x)).length,it=dealDo(c,f,deal,sc);it.known=kn;const yeni=CU.filter(x=>!worldOf("me").includes(x)).length;tanAdd(E,d.id,CU);
  if(E.eski&&E.eski[d.id]&&E.eski[d.id]!==c){const o=E.cos[E.eski[d.id]];o.view.me=Math.max(0,(o.view.me??50)-3);RK.news.unshift({d:MAG.day,t:`😒 ${SIRD(E.eski[d.id]).n}, ${d.name} için anlaşmayı yenilemediğine kırıldı (bakış −3)`})}if(E.eski)delete E.eski[d.id];
  if(yeni)RK.news.unshift({d:MAG.day,t:`🌍 ${d.name} ile ${yeni} yeni ülkede tanındın: dünya şöhretin ${worldOf("me").length} ülke`});const pay=deal.pay||0;MAG.cash+=pay;E.gelir+=pay;E.best=Math.max(E.best||0,d.q);kKayit(E);E.sold[d.id]={c,t:deal.t,r:deal.r||0,pay,d:MAG.day,sc};kKayit(E).push({fid:d.id,c,t:deal.t,r:deal.r||0,pay,d:MAG.day,sc});
- const st=E.cos[c];st.view.me=Math.min(100,(st.view.me??50)+3);RK.news.unshift({d:MAG.day,t:`🤝 ${SIRD(c).n} ile anlaştın: ${d.name}, ${dealTxt(deal)}${pay?` · ${tl(pay)}`:""}`});magSave()}
+ const st=E.cos[c];st.view.me=Math.min(100,(st.view.me??50)+3);RK.news.unshift({d:MAG.day,t:`🤝 ${SIRD(c).n} ile anlaştın: ${d.name}, ${dealTxt(deal)}${pay?` · ${tl(pay)}`:""}`});magSave();
+ celebrate({ic:"🤝",who:[PRT("me"),MASK(c)],h:`${SIRD(c).n} “${d.name}” parfümünü aldı!`,sub:`${dealTxt(deal)}${deal.t==="telif"?" · her satıştan payın gelecek":""}${yeni?`<br>🌍 ${yeni} yeni ülkede tanındın, dünya şöhretin <b>${worldOf("me").length} ülke</b>`:""}`,pay,clip:celClip(d.name)})}
 // sipariş: şirket ara ara gelir; yarısında kendi formülü vardır
 const BR_MAXU={EDT:[220,380],EDP:[340,560],Extrait:[520,850]};
 const brOf=()=>MAG.brief&&MAG.brief.st!=="bitti"&&MAG.brief.v===2?MAG.brief:null;
@@ -1024,6 +1035,7 @@ function yzClose(news){const Y=yzE(),m=MAG.day/30,pool=yzPool();if(Y.hist.some(h
  Y.hist.unshift({m,d:MAG.day,w});Y.hist=Y.hist.slice(0,36);if(!txt.length)return;
  const mine=Object.entries(w).filter(([k,x])=>x.by==="me");
  news.push(`🏅 Ayın yarışmaları sonuçlandı (Ay ${m}): ${mine.length?`${mine.length} madalya senin! `:""}${txt.join(" · ")}`);
+ if(mine.length)celebrate({ic:"🏅",who:[PRT("me")].concat(mine.slice(0,1).map(([k,x])=>MASK(x.c))),h:mine.length>1?`${mine.length} madalya kazandın!`:"Madalya kazandın!",sub:mine.map(([k,x])=>{const Y=YZ_K.find(y=>y[0]===k);return `${Y[1]} <b>${Y[2]}</b>: ${esc(x.nm)}`}).join("<br>")+"<br>Kazanan parfümler bir ay boyunca daha çok satacak.",clip:`Ay ${m} yarışmalarında ${ME_NM} parladı`});
  gzAdd({tp:"yz",h:`Özel sayı: Ay ${m} yarışmalarının kazananları`,b:txt.join(". ")});
  if(m%12===0){const t=yzYear(m/12-1);if(t[0])news.push(`👑 Yılın Parfümatörü (Yıl ${m/12}): ${yzBy(t[0][0])}, ${t[0][1]} madalya`)}}
 // yıl y (0'dan): o yılın 12 ayındaki madalyalar, çoktan aza
@@ -1354,7 +1366,7 @@ function akorTry(){const U=UI.akr;if(U.s.some(x=>!x.k)||U.s[0].k===U.s[1].k){U.r
   else{const fams=[...new Set(a.ks.filter(k=>k!==known&&NB[k]).map(k=>NB[k].fam))];sub=`${NB[known].tr} doğru. Eşi şu ailelerden birinde: ${fams.join(", ")}.`}
   r={t:"near",h:`${a.ic} Bir akorun yarısı gibi duruyor.`,sub}}
  else if(b.dev<=akTol()){if(b.found)r={t:"old",h:`${a.ic} ${a.n} akoru yine oluştu.`,sub:"Bu akoru zaten biliyorsun."};
-  else{LAB.akor[a.id]={t:Date.now(),n:U.tries,org:UI.akr.s.every(x=>x.k&&NB[x.k]&&orgTip(x.k)==="dogal")};RK.news.unshift({d:MAG.day,t:`🔬 Yeni akor bulundu: ${a.n}; ${MAG.co} laboratuvarında ${U.tries} denemede çözüldü`});regAkor(a.id);labSave();xpGain(20);const nk=NB[AKEY(a.id)];r={t:"win",h:`${a.ic} Yeni akor: ${a.n}! ${LAB.akor[a.id].org?"🌱 doğal":"🧪 sentetik"}`,sub:a.why,why:`Artık formül masasında ${LNL[nk.l]} notalar arasında.`}}}
+  else{LAB.akor[a.id]={t:Date.now(),n:U.tries,org:UI.akr.s.every(x=>x.k&&NB[x.k]&&orgTip(x.k)==="dogal")};RK.news.unshift({d:MAG.day,t:`🔬 Yeni akor bulundu: ${a.n}; ${MAG.co} laboratuvarında ${U.tries} denemede çözüldü`});regAkor(a.id);labSave();xpGain(20);celebrate({ic:a.ic,who:[PRT("me"),PRT(KD.kim.n)],h:`Yeni akor: ${a.n}!`,sub:`${U.tries} denemede çözüldü · ${LAB.akor[a.id].org?"🌱 doğal":"🧪 sentetik"}<br>Artık AR-GE masasında kullanabilirsin.`,clip:`${MAG.co} yeni bir akorun sırrını çözdü: ${a.n}`});const nk=NB[AKEY(a.id)];r={t:"win",h:`${a.ic} Yeni akor: ${a.n}! ${LAB.akor[a.id].org?"🌱 doğal":"🧪 sentetik"}`,sub:a.why,why:`Artık formül masasında ${LNL[nk.l]} notalar arasında.`}}}
  else{const w=UI.akr.s.map(x=>({nm:NB[x.k].tr,df:x.d-akIdeal(x.k)})).sort((x,y)=>Math.abs(y.df)-Math.abs(x.df))[0];r={t:"ratio",h:`${a.ic} İkisi uyuyor, oran tutmadı.`,sub:`Sapma ${b.dev} damla, en fazla ${akTol()} olabilir. ${w.nm} ${w.df>0?"fazla":"az"} geliyor.`}}
  U.res=r}
 
@@ -1378,7 +1390,7 @@ function labTry(){const U=UI.lab;if(U.s.some(x=>!x.k)||new Set(U.s.map(x=>x.k)).
  if(!b||b.m===0)r={t:"no",h:"Karışım bulanıklaştı, hiçbir bilinen moleküle benzemedi.",sub:"Her molekül üç hammadde grubundan kurulur. Defterdeki ipuçlarına bak."};
  else if(b.m<3)r={t:"near",h:`${d.ic} Bir şeye benziyor: “${d.tease}”`,sub:`${b.m} hammadde doğru. Eksik olan: ${d.sd[b.missSl]}.`};
  else if(b.dev<=labTol()){if(b.found)r={t:"old",h:`${d.ic} ${d.n} yine oluştu.`,sub:"Bu molekülü zaten biliyorsun."};
-  else{LAB.mol[b.id]={t:Date.now(),n:U.tries,org:U.s.every(x=>x.k&&orgRaw(x.k)==="dogal")};RK.news.unshift({d:MAG.day,t:`🔬 Yeni molekül bulundu: ${d.n}; ${MAG.co} laboratuvarında ${U.tries} denemede çözüldü`});regMol(b.id);labSave();xpGain(20);r={t:"win",h:`${d.ic} Yeni molekül: ${d.n}! ${LAB.mol[b.id].org?"🌱 doğal":"🧪 sentetik"}`,sub:d.his,why:d.why+` Artık formül masasında ${LNL[d.l]} notalar arasında.`}}}
+  else{LAB.mol[b.id]={t:Date.now(),n:U.tries,org:U.s.every(x=>x.k&&orgRaw(x.k)==="dogal")};RK.news.unshift({d:MAG.day,t:`🔬 Yeni molekül bulundu: ${d.n}; ${MAG.co} laboratuvarında ${U.tries} denemede çözüldü`});regMol(b.id);labSave();xpGain(20);celebrate({ic:d.ic,who:[PRT("me"),PRT(KD.kim.n)],h:`Yeni molekül: ${d.n}!`,sub:`${esc(d.fam)} · ${LNL[d.l]} nota · ${U.tries} denemede çözüldü<br>Artık AR-GE masasında kullanabilirsin.`,clip:`${MAG.co} laboratuvarında büyük keşif: ${d.n}`});r={t:"win",h:`${d.ic} Yeni molekül: ${d.n}! ${LAB.mol[b.id].org?"🌱 doğal":"🧪 sentetik"}`,sub:d.his,why:d.why+` Artık formül masasında ${LNL[d.l]} notalar arasında.`}}}
  else{const w=b.items.slice().sort((x,y)=>Math.abs(y.df)-Math.abs(x.df))[0];r={t:"ratio",h:`${d.ic} Hammaddeler doğru, oranlar tutmadı.`,sub:`Sapma ${b.dev} damla, en fazla ${labTol()} olabilir. En çok ${w.nm} ${w.df>0?"fazla":"az"} geliyor.`}}
  U.res=r}
 
@@ -1789,7 +1801,7 @@ const labTol=()=>2+Math.round(3*kf("kim","formul")),akTol=()=>kf("kim","formul")
 // genel seviye: deneyimle yükselir, her seviye 3 yetenek puanı verir
 if(typeof KD.pts!=="number")KD.pts=Object.values(KD.pts||{}).reduce((a,x)=>a+x,0);if(!KD.lv){KD.lv=1;KD.xp=0}
 const xpNeed=L=>60+30*(L-1),LV_PTS=3;
-function xpGain(n){KD.xp+=n;let up=0;while(KD.xp>=xpNeed(KD.lv)){KD.xp-=xpNeed(KD.lv);KD.lv++;KD.pts+=LV_PTS;up++}kdSave();return up}
+function xpGain(n){KD.xp+=n;let up=0;while(KD.xp>=xpNeed(KD.lv)){KD.xp-=xpNeed(KD.lv);KD.lv++;KD.pts+=LV_PTS;up++}kdSave();if(up)celebrate({ic:"⬆️",who:[PRT("me")],h:`Seviye ${KD.lv}!`,sub:`${up*LV_PTS} yetenek puanı kazandın.<br>👥 Kadro sayfasında istediğin yeteneğe ver.`,btn:"Süper! ⬆️"});return up}
 function kPreset(lv){["parf","kim"].forEach(r=>{for(const k in KD[r].sk)KD[r].sk[k]=lv});KD.pts=0;kdSave()}
 function avatar(name,col){const ini=name.split(" ").map(x=>x[0]).join("").slice(0,2);return `<svg viewBox="0 0 48 48" width="48" height="48" aria-hidden="true"><circle cx="24" cy="24" r="22" fill="${col}" stroke="var(--ink)" stroke-width="1.5"/><text x="24" y="30" text-anchor="middle" font-family="'IM Fell English SC',Georgia,serif" font-size="17" fill="#f6ecd2">${esc(ini)}</text></svg>`}
 function kadroHtml(){const col={parf:"#7b2d1e",kim:"#4f6a2e",ceo:"#2f4a6a"},P=PZ();
@@ -2532,7 +2544,7 @@ function magazaHtml(){sefInit();rkInit();const sel=MAG.sef.find(s=>s.id===UI.sef
 
 // akan saat: 1× hızda 10 saniyede bir gün; ekran gizliyse durur
 const CLK={spd:lsGet("p2.spd")??1,acc:0,last:performance.now()};
-function clkTick(){const now=performance.now(),dt=now-CLK.last;CLK.last=now;if(!CLK.spd||document.hidden)return;CLK.acc+=dt*CLK.spd;
+function clkTick(){const now=performance.now(),dt=now-CLK.last;CLK.last=now;if(!CLK.spd||document.hidden||CEL.open)return;CLK.acc+=dt*CLK.spd;
  if(CLK.acc>=10000){CLK.acc=0;CLK.flT=performance.now();dayPass();const a=document.activeElement;if(a&&/INPUT|SELECT|TEXTAREA/.test(a.tagName)||UI.npick||CLK.down)drawNav();else render()}else{const b=document.querySelector(".clkbar i");if(b)b.style.width=(CLK.acc/100).toFixed(0)+"%";if(UI.tab==="magaza")sefAnim()}}
 setInterval(clkTick,250);
 addEventListener("pointerdown",()=>{CLK.down=1},true);addEventListener("pointerup",()=>{CLK.down=0},true);addEventListener("pointercancel",()=>{CLK.down=0},true);
@@ -2540,6 +2552,22 @@ function clkHtml(){return `<span class="row clk" style="gap:4px"><span class="se
 
 function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
 // gün geçince sayfa yeniden çizilir: açık bölümler (details) ve yana kaydırılmış tablolar korunur (CEKO 2026-10-23: kart arkası hemen kapanıyordu)
+// 🎉 kutlama ekranı: büyük anlarda (şirket aldı, madalya, keşif, seviye) ortada kart, konfeti, sayan para, gazete kupürü
+const CEL={q:[],open:false};
+function celebrate(o){CEL.q.push(o);setTimeout(celShow,0)}
+function celShow(){if(CEL.open||!CEL.q.length)return;const o=CEL.q.shift();CEL.open=true;
+ const red=matchMedia("(prefers-reduced-motion: reduce)").matches,CC=["#FBA4AF","#FBC2A3","#FCEEBE","#B9DDA8","#9DD8D4","#F5BFD2","#FA5557","#FACF71","#87B76F","#37898C"];
+ const conf=red?"":Array.from({length:60},(_,i)=>`<i style="left:${(Math.random()*100).toFixed(1)}%;background:${CC[i%CC.length]};animation-delay:${(Math.random()*1.2).toFixed(2)}s;animation-duration:${(2.4+Math.random()*1.8).toFixed(2)}s;transform:rotate(${Math.round(Math.random()*360)}deg);${i%3?"":"border-radius:50%;"}width:${6+Math.round(Math.random()*6)}px;height:${8+Math.round(Math.random()*8)}px"></i>`).join("");
+ const el=document.createElement("div");el.className="celo";el.setAttribute("role","dialog");el.setAttribute("aria-modal","true");el.setAttribute("aria-label",o.h);
+ el.innerHTML=`<div class="celc">${conf}</div><div class="celk"><div class="celic">${o.ic||"🎉"}</div><div class="celw">${(o.who||[]).map((s,i)=>`<div class="celp" style="animation-delay:${i*.15}s">${s}</div>`).join("")}</div>
+ <h2 class="celh">${esc(o.h)}</h2>${o.sub?`<div class="cels">${o.sub}</div>`:""}${o.pay?`<div class="celm">+<b data-to="${o.pay}">0</b> TL</div>`:""}
+ ${o.clip?`<div class="celg"><div class="celgt">Parfümatör Gazetesi</div><div class="celgh">${esc(o.clip)}</div><div class="celgd">Gün ${MAG.day} · özel haber</div></div>`:""}
+ <button class="btn celb" data-cel="1">${o.btn||"Harika! 🎉"}</button></div>`;
+ document.body.appendChild(el);const b=el.querySelector(".celb");b.focus();
+ const close=()=>{el.remove();CEL.open=false;if(CEL.q.length)setTimeout(celShow,150)};b.onclick=close;el.addEventListener("keydown",e=>{if(e.key==="Escape")close()});
+ const m=el.querySelector(".celm b");if(m){const to=+m.dataset.to,t0=performance.now(),dur=red?0:1400;const step=t=>{const k=dur?Math.min(1,(t-t0)/dur):1;m.textContent=Math.round(to*(1-Math.pow(1-k,3))).toLocaleString("tr-TR");if(k<1&&el.isConnected)requestAnimationFrame(step)};requestAnimationFrame(step)}}
+const CEL_CLIP=[n=>`${ME_NM} yine yaptı!`,n=>`${n} kapış kapış gidecek`,n=>`Koku dünyası ${n} ile çalkalanıyor`,n=>`Atölyeden yeni bir başarı: ${n}`];
+const celClip=n=>CEL_CLIP[Math.floor(Math.random()*CEL_CLIP.length)](n);
 function render(){const ap=document.getElementById("app"),tb=UI.tab,keep=ap&&UI._rt===tb?{d:[...ap.querySelectorAll("details")].map(e=>e.open),x:[...ap.querySelectorAll("*")].filter(e=>e.scrollLeft>0).map(e=>[e.className,[...ap.getElementsByClassName(e.className.split(" ")[0]||"_")].indexOf(e),e.scrollLeft])}:null;
  renderMain();UI._rt=UI.tab;if(keep&&UI.tab===tb){const D=ap.querySelectorAll("details");if(D.length===keep.d.length)D.forEach((e,i)=>{if(keep.d[i])e.open=true});
   keep.x.forEach(([c,i,v])=>{const e=c&&ap.getElementsByClassName(c.split(" ")[0])[i];if(e)e.scrollLeft=v})}}
@@ -2625,7 +2653,7 @@ if(a==="sisefix"){fixStart(b.dataset.c);render();return}
  if(a==="labreset"){Object.keys(NB).filter(k=>NB[k].mol).forEach(k=>{const l=NB[k].l;delete NB[k];byL[l]=byL[l].filter(x=>x!==k)});UI.akr.res=null;UI.akr.tries=0;LAB={mol:{},akor:{}};labSave();UI.lab.res=null;UI.lab.tries=0;render();return}
  if(a==="dssw"){const d=dsT();if(d){d.ds.c=b.dataset.v;dsRefresh(d)}render();return}
  if(a==="dsrand"){const d=dsT();if(d){d.ds=dsAuto(d.id+"|"+Math.random(),dsFam(d),d.tier,"pazar");dsRefresh(d)}render();return}
- if(a==="kup"){const r=b.dataset.r,k=b.dataset.k;if(KD.pts>0&&KD[r].sk[k]<20){KD[r].sk[k]++;KD.pts--;kdSave()}render();return}
+ if(a==="kup"){const r=b.dataset.r,k=b.dataset.k,t0=kTier();if(KD.pts>0&&KD[r].sk[k]<20){KD[r].sk[k]++;KD.pts--;kdSave()}if(kTier()>t0)celebrate({ic:"🎖️",who:[PRT("me")],h:`Rütbe atladın: ${LV[kTier()].n} Parfümatör!`,sub:`Artık daha yüksek kalite isimlerine ulaşabilir, daha zor formüller kurabilirsin.`,clip:`${ME_NM} artık bir ${LV[kTier()].n}`});render();return}
  if(a==="kpre"){kPreset(+b.dataset.v);newRD(0);render();return}
  if(a==="kceo"){KD.ceo.sk=ceoPick(Math.round(kAvg("ceo")));kdSave();render();return}
  if(a==="day"){dayPass();render();return}
