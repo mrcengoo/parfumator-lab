@@ -212,10 +212,11 @@ body,#nav,.bbar,.moreSheet,.sheet,.pcard,.verdict,.mapw,.card{background-image:n
 .pzc .chips{margin:4px 0}
 .bad{color:#c0392b}
 /* telefonda üst şerit ince: başlık gizli, stok ve sıfırla Diğer menüsünde */
+@media (max-width:400px){#nav .strip .stk-l{display:none}}
 @media (max-width:700px){#nav{padding-top:6px;padding-bottom:6px;gap:0;margin-bottom:10px}#nav .topnav{display:none}
  #nav .strip{display:flex;flex-wrap:wrap;gap:4px 10px;padding:5px 8px;font-size:13px;align-items:center}
- #nav .strip .co b{font-size:14px}#nav .strip .sen,#nav .strip .stk-s,#nav .clk>[data-act="gamereset"]{display:none}
- #nav .clk .seg button{padding:3px 7px;font-size:12.5px}#nav .strip>.btn{padding:3px 8px;font-size:12.5px;margin-left:auto}}
+ #nav{position:static}#nav .strip>span,#nav .clk{white-space:nowrap;flex-wrap:nowrap}#nav .strip{flex-wrap:nowrap;gap:6px;padding:4px 6px;font-size:12.5px}#nav .strip .co,#nav .strip .stk-u,#nav .strip .stk-z,#nav .strip .sen,#nav .strip .stk-s,#nav .clk>[data-act="gamereset"]{display:none}
+ #nav .clk .seg button{padding:3px 6px;font-size:12px}#nav .clkbar{min-width:0;height:24px;padding:0 6px;font-size:12px}#nav .strip>.btn{padding:3px 8px;font-size:12.5px;margin-left:auto}}
 /* Tatlı paleti (CEKO 2026-10-21): zemin beyaz, başlıklar Fruit Tart/Macaron/Ice lollies/Thai tea/Cupcake renkleri, yazılar siyah ve belirgin */
 :root,:root[data-theme="dark"],:root[data-theme="light"]{--ink:#000000;--ink2:#262626;--rule:#cfcfd6;--accent:#37898C;--tabon:#37898C;
  --p1:#FBA4AF;--p1b:#FA5557;--p2:#FBC2A3;--p2b:#F9A272;--p3:#FCEEBE;--p3b:#FACF71;--p4:#B9DDA8;--p4b:#87B76F;--p5:#9DD8D4;--p5b:#37898C;--p6:#F5BFD2;--p6b:#F79CB1}
@@ -1047,7 +1048,7 @@ function tabsHtml(){return ""}
 const navBtn=([k,ic,n],cls)=>`<button class="${cls}${UI.tab===k?" on":""}" data-act="tab" data-v="${k}" aria-current="${UI.tab===k?"page":"false"}">${ic} ${n}${k==="kadro"&&KD.pts?` <span class="dot">${KD.pts}</span>`:""}</button>`;
 function drawNav(){const stok=MAG.items.reduce((a,x)=>a+x.stok*x.unit,0),cnt=MAG.items.reduce((a,x)=>a+x.stok,0);
  document.getElementById("nav").innerHTML=`<div class="topnav"><div class="brand">Parfümatör Laboratuvarı</div><nav class="menu" aria-label="Bölümler">${NAV.map(x=>navBtn(x,"tabb")).join("")}</nav></div>
- <div class="strip"><span class="co">🧪 <b>${esc(MAG.co)}</b> <span class="sen">SEN</span></span><span>Nakit <b>${tl(MAG.cash)}</b></span><span class="stk-s">Formül geliri <b>${tlk(EV().gelir)}</b></span><span>🌍 <b>${worldOf("me").length}</b> ülke</span><span>${SEAS[Math.floor(MAG.day/30)%4]}</span>${clkHtml()}</div>`;
+ <div class="strip"><span class="co">🧪 <b>${esc(MAG.co)}</b> <span class="sen">SEN</span></span><span><span class="stk-l">Nakit </span><b>${tl(MAG.cash)}</b></span><span class="stk-s">Formül geliri <b>${tlk(EV().gelir)}</b></span><span class="stk-u">🌍 <b>${worldOf("me").length}</b> ülke</span><span class="stk-z">${SEAS[Math.floor(MAG.day/30)%4]}</span>${clkHtml()}</div>`;
  const more=NAV.filter(x=>!BNAV.includes(x[0])),moreOn=more.some(x=>x[0]===UI.tab);
  document.getElementById("bnav").innerHTML=`${UI.more?`<div class="moreSheet">${more.map(x=>navBtn(x,"tabb")).join("")}<button class="tabb" data-act="gamereset">↺ Oyunu sıfırla</button></div>`:""}<nav class="bbar" aria-label="Alt menü">${NAV.filter(x=>BNAV.includes(x[0])).map(([k,ic,n,sh])=>`<button class="${UI.tab===k?"on":""}" data-act="tab" data-v="${k}"><span class="bi">${ic}</span>${sh}</button>`).join("")}<button class="${moreOn||UI.more?"on":""}" data-act="more" aria-expanded="${!!UI.more}"><span class="bi">☰</span>Diğer</button></nav>`}
 // Genel Bakış: kasa, dünkü satış, şirketlerin parası, haberler
